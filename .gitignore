@@ -1,6 +1,13 @@
-/__pycache__
-/tbench/__pycache__
-/tbench.egg-info
-/venv
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+/venv/
+.env/
+*.egg-info/
+
+# Distribution / packaging
 /build
 /dist
