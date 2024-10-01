@@ -44,3 +44,8 @@ package-dir = {"" = "src"}  # Single-quoted key for directory name
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+# Entry point for the CLI script
+[project.scripts]
+tbench = "cli.app:main"
+
