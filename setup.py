@@ -12,7 +12,6 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     include_package_data=True,
-    packages=find_packages(),
     install_requires=[
         'jsonschema',  # Add your dependencies here
         'paho-mqtt',
