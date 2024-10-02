@@ -68,4 +68,4 @@ At last, **pymodule-0.1.0-py3-none-any.whl** can be installed outside the virtua
 
 `pip install pymodule-0.1.0-py3-none-any.whl`
 
-Thse packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milkyway Galaxy.
+These packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milky Way Galaxy.
