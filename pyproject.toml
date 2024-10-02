@@ -29,14 +29,14 @@ dependencies = [
 
 # Defining various URLs (these UTL are examples, please add ture urls and/or remove redundant ones.
 [project.urls]
-homepage = "https://my_project.example.com"  # Literal string for homepage URL
+homepage = "https://pymodule.example.com"  # Literal string for homepage URL
 repository = "https://repo.pts.rnd.bg:4444/ivan.cenov/tbench.git"  # Basic string for repository URL
-documentation = "https://my_project.readthedocs.io"
-bug_tracker = "https://github.com/username/my_project/issues"
-changelog = "https://github.com/username/my_project/releases"
-ci_pipeline = "https://github.com/username/my_project/actions"
+documentation = "https://pymodule.readthedocs.io"
+bug_tracker = "https://github.com/username/pymodule/issues"
+changelog = "https://github.com/username/pymodule/releases"
+ci_pipeline = "https://github.com/username/pymodule/actions"
 funding = "https://github.com/sponsors/username"
-faq = "https://my_project.example.com/faq"  # Custom URL key for FAQ
+faq = "https://pymodule.example.com/faq"  # Custom URL key for FAQ
 
 # Example custom configuration for `setuptools`
 [tool.setuptools]
