@@ -43,7 +43,7 @@ or
 
 To install the project in editable mode run
 
-`python -m install -e .`
+`pip install -e .`
 
 This commands installs the project in so called editable mode. It is usefull mode when several projects are developed in the same time, par example an application that uses another library project which is under development. Any changes in the library project will be visible instantly from the other project(s) in the same virtual environment.
 
