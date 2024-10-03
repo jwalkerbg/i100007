@@ -4,7 +4,6 @@ import argparse
 import utils.utilities
 import drivers.ina236
 import manufacturing_client.mfclient
-import tests.test_1
 
 def main():
     parser = argparse.ArgumentParser(description="CLI Tool for My Project")
@@ -39,7 +38,6 @@ def main():
     utils.hello_from_utils()
     drivers.hello_from_ina236()
     manufacturing_client.hello_from_mfclient()
-    tests.hello_from_test_1()
     print(f"----------------------------------")
 
 if __name__ == "__main__":

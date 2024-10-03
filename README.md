@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is a simple skeleton of Python importable module plus CLI interface. It uses modern **pyproject.toml** and does not use **setup.py**.
+This project is a simple skeleton of Python importable module which has in addition CLI interface. It uses modern **pyproject.toml** and does not use **setup.py**.
 
 ## Virtual environment, installation, running
 
@@ -12,7 +12,7 @@ On a console terminal execute
 
 `python -m venv venv`
 
-This creates a virtual environment in a subdirectory **venv** of the current directory (usually the root directory of the project's repository). It is not obligatory. Virtual enevornment can be created in a parent irectory that contains several repositories and the projects in these repositiories to share common virtual envirnoment:
+This creates a virtual environment in a subdirectory **venv** of the current directory (usually the root directory of the project's repository). It is not obligatory. Virtual environment can be created in a parent directory that contains several repositories and the projects in these repositiories can share common virtual envirnoment:
 
 `python -m venv ..\venv`
 
@@ -22,13 +22,21 @@ or even
 
 Before use virtual enviromments must be activated:
 
+Windows:
+
 `./venv/Scripts/activate`
 
 or
 
 `./venv/Scripts/Activate.ps1`
 
-Note that the execution of powershell scripts must be enabled on Windows platforms. To enable this **globaly** execute:
+Linux:
+
+`source ./venv/bin/activate`
+
+Note that the path to `activate` in Linux is different that the path in Windows.
+
+Note that the execution of powershell scripts must be enabled on Windows platforms. To enable this globaly execute:
 
 1. Open powershell console as Administrator
 2. To view curent execution policy execute
