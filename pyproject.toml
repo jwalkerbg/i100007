@@ -26,6 +26,12 @@ dependencies = [
     "rfc3986"
 ]
 
+# Optional dependencies section for development tools
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0"
+]
+
 # Defining various URLs (these UTL are examples, please add other urls and/or remove redundant ones.
 [project.urls]
 homepage = "https://pymodule.example.com"  # Literal string for homepage URL
@@ -47,4 +53,7 @@ where = ["src"]
 # Entry point for the CLI script
 [project.scripts]
 pymodule = "cli.app:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
