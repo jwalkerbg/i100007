@@ -20,17 +20,16 @@ maintainers = [
 
 # Dependencies
 dependencies = [
-    "numpy>=1.18.5",
-    "jsonschema",
+    "numpy",
     "paho-mqtt",
-    "rfc3986",
-    "PyQt5"
+    "jsonschema",
+    "rfc3986"
 ]
 
-# Defining various URLs (these UTL are examples, please add ture urls and/or remove redundant ones.
+# Defining various URLs (these UTL are examples, please add other urls and/or remove redundant ones.
 [project.urls]
 homepage = "https://pymodule.example.com"  # Literal string for homepage URL
-repository = "https://repo.pts.rnd.bg:4444/ivan.cenov/tbench.git"  # Basic string for repository URL
+repository = "http://github.com/username/pymodule.git"  # Basic string for repository URL
 documentation = "https://pymodule.readthedocs.io"
 bug_tracker = "https://github.com/username/pymodule/issues"
 changelog = "https://github.com/username/pymodule/releases"
@@ -47,5 +46,5 @@ where = ["src"]
 
 # Entry point for the CLI script
 [project.scripts]
-tbench = "cli.app:main"
+pymodule = "cli.app:main"
 
