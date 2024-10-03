@@ -1,6 +1,8 @@
 # src/cli/app.py
 import argparse
 
+import core.core_module_a
+import core.core_module_b
 import utils.utilities
 import drivers.ina236
 
@@ -34,6 +36,8 @@ def main():
 
     print(f"\nCalls hello functions from modules")
     print(f"----------------------------------")
+    core.hello_from_core_module_a()
+    core.hello_from_core_module_b()
     utils.hello_from_utils()
     drivers.hello_from_ina236()
     print(f"----------------------------------")
