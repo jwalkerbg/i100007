@@ -5,6 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pymodule"
 version = "0.1.0"
+template_name = "cliapp"
+template_version = "0.1.0"
 description = "Python module skeleton (please rename)"
 readme = { text = """This is a multi-line basic string.
 It allows for special characters such as \n for newlines and " for quotes.""", content-type = "text/plain" }
