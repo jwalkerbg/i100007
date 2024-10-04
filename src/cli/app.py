@@ -1,10 +1,10 @@
 # src/cli/app.py
 import argparse
 
+import core.core_module_a
+import core.core_module_b
 import utils.utilities
 import drivers.ina236
-import manufacturing_client.mfclient
-import tests.test_1
 
 def main():
     parser = argparse.ArgumentParser(description="CLI Tool for My Project")
@@ -36,10 +36,10 @@ def main():
 
     print(f"\nCalls hello functions from modules")
     print(f"----------------------------------")
+    core.hello_from_core_module_a()
+    core.hello_from_core_module_b()
     utils.hello_from_utils()
     drivers.hello_from_ina236()
-    manufacturing_client.hello_from_mfclient()
-    tests.hello_from_test_1()
     print(f"----------------------------------")
 
 if __name__ == "__main__":
