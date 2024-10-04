@@ -5,6 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pymodule"
 version = "0.1.0"
+template_name = "cliapp"
+template_version = "0.1.0"
 description = "Python module skeleton (please rename)"
 readme = { text = """This is a multi-line basic string.
 It allows for special characters such as \n for newlines and " for quotes.""", content-type = "text/plain" }
@@ -20,17 +22,22 @@ maintainers = [
 
 # Dependencies
 dependencies = [
-    "numpy>=1.18.5",
-    "jsonschema",
+    "numpy",
     "paho-mqtt",
-    "rfc3986",
-    "PyQt5"
+    "jsonschema",
+    "rfc3986"
 ]
 
-# Defining various URLs (these UTL are examples, please add ture urls and/or remove redundant ones.
+# Optional dependencies section for development tools
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0"
+]
+
+# Defining various URLs (these UTL are examples, please add other urls and/or remove redundant ones.
 [project.urls]
 homepage = "https://pymodule.example.com"  # Literal string for homepage URL
-repository = "https://repo.pts.rnd.bg:4444/ivan.cenov/tbench.git"  # Basic string for repository URL
+repository = "http://github.com/username/pymodule.git"  # Basic string for repository URL
 documentation = "https://pymodule.readthedocs.io"
 bug_tracker = "https://github.com/username/pymodule/issues"
 changelog = "https://github.com/username/pymodule/releases"
@@ -47,5 +54,8 @@ where = ["src"]
 
 # Entry point for the CLI script
 [project.scripts]
-tbench = "cli.app:main"
+pymodule = "cli.app:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
