@@ -28,7 +28,8 @@ dependencies = [
     "numpy",
     "paho-mqtt",
     "jsonschema",
-    "rfc3986"
+    "rfc3986",
+    "tomli; python_version < '3.11'"
 ]
 
 # Optional dependencies section for development tools
