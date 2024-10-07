@@ -1,7 +1,7 @@
 # core/config.py
 
 import sys
-from typing import Dict
+from typing import Dict, Any
 import importlib.resources as resources
 
 # Check Python version at runtime
@@ -66,6 +66,27 @@ class Config:
     def load_configs(self, file_path:str) -> None:
         self.config = self.load_toml(file_path=file_path)
         self.pyproject_config = self.load_pyproject()
+
+    def deep_update(self,config: Dict[str, Any], config_file: Dict[str, Any]) -> None:
+        """
+        Recursively updates a dictionary (`config`) with the contents of another dictionary (`config_file`).
+        It performs a deep merge, meaning that if a key contains a nested dictionary in both `config`
+        and `config_file`, the nested dictionaries are merged instead of replaced.
+
+        Parameters:
+        - config (Dict[str, Any]): The original dictionary to be updated.
+        - config_file (Dict[str, Any]): The dictionary containing updated values.
+
+        Returns:
+        - None: The update is done in place, so the `config` dictionary is modified directly.
+        """
+        for key, value in config_file.items():
+            if isinstance(value, dict) and key in config and isinstance(config[key], dict):
+                # If both values are dictionaries, recurse to merge deeply
+                self.deep_update(config[key], value)
+            else:
+                # Otherwise, update the key with the new value from config_file
+                config[key] = value
 
 # # Example usage
 # try:
