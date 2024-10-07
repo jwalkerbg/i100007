@@ -99,6 +99,20 @@ class Config:
                 # Otherwise, update the key with the new value from config_file
                 config[key] = value
 
+    def merge_cli_options(self,config:Dict, config_cli=None) -> Dict:
+        # handle CLI options if started from CLI interface
+        if config_cli:
+            if config_cli.param1:
+                self.config['parameters']['param1'] = config_cli.param1
+            if config_cli.param2:
+                self.config['parameters']['param2'] = config_cli.param2
+
+        # Handle general options
+        if config_cli.verbose is not None:
+            self.config['logging']['verbose'] = config_cli.verbose
+
+        return self.config
+
 # # Example usage
 # try:
 #     config = load_toml("config.toml")
