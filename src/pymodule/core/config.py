@@ -97,18 +97,3 @@ class Config:
             self.config['logging']['verbose'] = config_cli.verbose
 
         return self.config
-
-# # Example usage
-# try:
-#     config = load_toml("config.toml")
-#     print("Config loaded successfully:", config)
-# except Exception as e:
-#     print(f"Failed to load config: {e}")
-
-# # Load and access project data
-# pyproject_data = load_pyproject()
-
-# if pyproject_data:
-#     project_name = pyproject_data.get("project", {}).get("name", "Unknown")
-#     print(f"Project Name: {project_name}")
-
