@@ -26,24 +26,23 @@ def parse_args():
 def main():
     """Main entry point of the CLI."""
 
-    config = Config()
+    cfg = Config()
 
     # Step 1: Load the default configuration from config.json
-    config_file = config.load_configs("config.toml")
+    cfg.load_config_file("config.toml")
 
     # Step 2: Parse command-line arguments
     args = parse_args()
 
     # Step 3: Merge default config, config.json, and command-line arguments
-    config.merge_options(config_file, args)
+    cfg.merge_options(cfg.config, args)
 
-    run_app(config)
+    run_app(cfg)
 
 def run_app(config:Config) -> None:
     print("Running run_app")
 
     print(f"config = {config.config}")
-    print(f"pyproject.toml = {config.pyproject_config}")
 
 if __name__ == "__main__":
     main()

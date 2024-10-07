@@ -12,8 +12,7 @@ else:
 
 class Config:
     def __init__(self) -> None:
-        self.config = {}
-        self.pyproject_config = {}
+        self.config = self.DEFAULT_CONFIG
 
     DEFAULT_CONFIG = {
         'template': {
@@ -57,8 +56,19 @@ class Config:
             print(f"An unexpected error occurred while loading the TOML file: {e}")
             raise e  # Catch-all for any other unexpected exceptions
 
-    def load_configs(self, file_path:str) -> None:
-        self.config = self.load_toml(file_path=file_path)
+    def load_config_file(self, file_path: str="config.toml") -> None:
+        # Convert None to default value of 'config.json'
+        if file_path is None:
+            print(f"CFG: Using default '{file_path}'")
+            file_path = 'config.toml'
+        try:
+            config_file = self.load_toml(file_path=file_path)
+        except Exception as e:
+            config_file = {}
+
+        self.deep_update(config=self.config, config_file=config_file)
+
+        return config_file
 
     def deep_update(self,config: Dict[str, Any], config_file: Dict[str, Any]) -> None:
         """
@@ -82,9 +92,6 @@ class Config:
                 config[key] = value
 
     def merge_options(self, config_file:Dict, config_cli=None) -> Dict:
-
-        self.config = self.DEFAULT_CONFIG
-
         # handle CLI options if started from CLI interface
         if config_cli:
             if config_cli.param1:

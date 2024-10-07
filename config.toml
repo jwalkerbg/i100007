@@ -2,7 +2,7 @@
 
 # Sample of parameters in the program
 [parameters]
-param1 = 11
+#param1 = 11
 param2 = 22
 
 [logging]
