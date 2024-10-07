@@ -1,7 +1,7 @@
 # tests/test_core_module_a.py
 
 import unittest
-import core
+from pymodule import core
 
 class TestCore_a(unittest.TestCase):
     def test_hello_from_core_module_a(self):

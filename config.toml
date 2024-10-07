@@ -2,8 +2,8 @@
 
 # Sample of parameters in the program
 [parameters]
-param1 = 1
-param2 = 2
+param1 = 11
+param2 = 22
 
 [logging]
 verbose = true

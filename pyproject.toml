@@ -58,7 +58,7 @@ where = ["src"]
 
 # Entry point for the CLI script
 [project.scripts]
-pymodule = "cli.app:main"
+pymodule = "pymodule.cli.app:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

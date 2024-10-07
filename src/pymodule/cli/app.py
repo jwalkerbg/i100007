@@ -1,12 +1,12 @@
 # src/cli/app.py
 import argparse
 
-import core.core_module_a
-import core.core_module_b
-import utils.utilities
-import drivers.ina236
+import pymodule.core.core_module_a
+import pymodule.core.core_module_b
+import pymodule.utils.utilities
+import pymodule.drivers.ina236
 
-from core.config import Config
+from pymodule.core.config import Config
 
 def parse_args():
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
