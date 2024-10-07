@@ -10,6 +10,16 @@ if sys.version_info >= (3, 11):
 else:
     import tomli  # Use the external tomli for Python 3.7 to 3.10
 
+DEFAULT_CONFIG = {
+    'parameters': {
+        'param1': 1,
+        'param2': 2
+    },
+    'logging': {
+        'verbose': True
+    }
+}
+
 class Config:
     def __init__(self) -> None:
         self.config = {}
