@@ -1,0 +1,9 @@
+# config.toml
+
+# Sample of parameters in the program
+[parameters]
+param1 = 1
+param2 = 2
+
+[logging]
+verbose = true
