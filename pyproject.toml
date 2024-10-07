@@ -2,11 +2,6 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[template-model]
-template_name = "cliapp"
-template_version = "0.2.0"
-template_description = {text = """Template with CLI interface, configuration options in file and unit tests""", content-type = "text/plain" }
-
 [project]
 name = "pymodule"
 version = "0.1.0"

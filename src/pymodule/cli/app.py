@@ -35,7 +35,7 @@ def main():
     args = parse_args()
 
     # Step 3: Merge default config, config.json, and command-line arguments
-    config.merge_cli_options(config_file, args)
+    config.merge_options(config_file, args)
 
     run_app(config)
 

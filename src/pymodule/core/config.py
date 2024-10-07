@@ -10,20 +10,25 @@ if sys.version_info >= (3, 11):
 else:
     import tomli  # Use the external tomli for Python 3.7 to 3.10
 
-DEFAULT_CONFIG = {
-    'parameters': {
-        'param1': 1,
-        'param2': 2
-    },
-    'logging': {
-        'verbose': True
-    }
-}
-
 class Config:
     def __init__(self) -> None:
         self.config = {}
         self.pyproject_config = {}
+
+    DEFAULT_CONFIG = {
+        'template': {
+            'template_name': "cliapp",
+            'template_version': "0.2.0",
+            'template_description': { 'text': """Template with CLI interface, configuration options in file and unit tests""", 'content-type': "text/plain" }
+        },
+        'logging': {
+            'verbose': True
+        },
+        'parameters': {
+            'param1': 1,
+            'param2': 2
+        }
+    }
 
     def load_toml(self,file_path) -> Dict:
         """
@@ -52,31 +57,8 @@ class Config:
             print(f"An unexpected error occurred while loading the TOML file: {e}")
             raise e  # Catch-all for any other unexpected exceptions
 
-    def load_pyproject(self):
-        try:
-            # Attempt to load pyproject.toml from the package root
-            with resources.path('pymodule', 'pyproject.toml') as pyproject_path:
-                print(f"pyproject_path = {pyproject_path}")
-                with open(pyproject_path, 'rb') as f:
-                    if sys.version_info >= (3, 11):         # Use tomllib for Python 3.11+
-                        pyproject_data = tomllib.load(f)
-                    else:
-                        pyproject_data = tomli.load(f)    # Use tomli for Python 3.7 - 3.10
-            return pyproject_data
-
-        except FileNotFoundError:
-            print("Error: 'pyproject.toml' not found in the package directory.")
-            raise e
-        except tomllib.TOMLDecodeError as e:
-            print(f"Error: Failed to decode TOML file. Reason: {e}")
-            raise e
-        except OSError as e:
-            print(f"Error: I/O error while accessing 'pyproject.toml'. Reason: {e}")
-            raise e
-
     def load_configs(self, file_path:str) -> None:
         self.config = self.load_toml(file_path=file_path)
-        self.pyproject_config = self.load_pyproject()
 
     def deep_update(self,config: Dict[str, Any], config_file: Dict[str, Any]) -> None:
         """
@@ -99,7 +81,10 @@ class Config:
                 # Otherwise, update the key with the new value from config_file
                 config[key] = value
 
-    def merge_cli_options(self,config:Dict, config_cli=None) -> Dict:
+    def merge_options(self, config_file:Dict, config_cli=None) -> Dict:
+
+        self.config = self.DEFAULT_CONFIG
+
         # handle CLI options if started from CLI interface
         if config_cli:
             if config_cli.param1:
