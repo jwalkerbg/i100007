@@ -52,7 +52,7 @@ class Config:
             print(f"An unexpected error occurred while loading the TOML file: {e}")
             raise e  # Catch-all for any other unexpected exceptions
 
-    def load_pyproject():
+    def load_pyproject(self):
         try:
             # Attempt to load pyproject.toml from the package root
             with resources.path('pymodule', 'pyproject.toml') as pyproject_path:
@@ -60,7 +60,7 @@ class Config:
                     if sys.version_info >= (3, 11):         # Use tomllib for Python 3.11+
                         pyproject_data = tomllib.load(f)
                     else:
-                        pyproject_data = tomllib.load(f)    # Use tomli for Python 3.7 - 3.10
+                        pyproject_data = tomli.load(f)    # Use tomli for Python 3.7 - 3.10
             return pyproject_data
 
         except FileNotFoundError:
