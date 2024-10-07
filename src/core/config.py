@@ -56,6 +56,7 @@ class Config:
         try:
             # Attempt to load pyproject.toml from the package root
             with resources.path('pymodule', 'pyproject.toml') as pyproject_path:
+                print(f"pyproject_path = {pyproject_path}")
                 with open(pyproject_path, 'rb') as f:
                     if sys.version_info >= (3, 11):         # Use tomllib for Python 3.11+
                         pyproject_data = tomllib.load(f)
