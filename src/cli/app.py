@@ -6,41 +6,44 @@ import core.core_module_b
 import utils.utilities
 import drivers.ina236
 
+from core.config import Config
+
+def parse_args():
+    """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
+    parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides')
+
+    # parameters
+    parser.add_argument('--param1', type=int, help="Parameter1")
+    parser.add_argument('--param2', type=int, help="Parameter2")
+
+    # Other general options can still be added
+    verbosity_group = parser.add_mutually_exclusive_group()
+    verbosity_group.add_argument('--verbose', dest='verbose', action='store_const', const=True, help='Enable verbose mode')
+    verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const', const=False, help='Disable verbose mode')
+
+    return parser.parse_args()
+
 def main():
-    parser = argparse.ArgumentParser(description="CLI Tool for My Project")
-    parser.add_argument("--version", action="version", version="pymodule 0.1.0")
+    """Main entry point of the CLI."""
 
-    # Define subcommands
-    subparsers = parser.add_subparsers(title="commands", dest="command")
+    config = Config()
 
-    # Example command: greet
-    greet_parser = subparsers.add_parser("greet", help="Greet the user")
-    greet_parser.add_argument("name", type=str, help="Name of the person to greet")
+    # Step 1: Load the default configuration from config.json
+    config_file = config.load_configs("config.toml")
 
-    # Example command: add
-    add_parser = subparsers.add_parser("add", help="Add two numbers")
-    add_parser.add_argument("x", type=int, help="First number")
-    add_parser.add_argument("y", type=int, help="Second number")
+    # Step 2: Parse command-line arguments
+    args = parse_args()
 
-    # Parse the arguments
-    args = parser.parse_args()
+    # Step 3: Merge default config, config.json, and command-line arguments
+    config.merge_cli_options(config_file, args)
 
-    # Handle the commands
-    if args.command == "greet":
-        print(f"Hello, {args.name}!")
-    elif args.command == "add":
-        result = args.x + args.y
-        print(f"The sum of {args.x} and {args.y} is {result}")
-    else:
-        parser.print_help()
+    run_app(config)
 
-    print(f"\nCalls hello functions from modules")
-    print(f"----------------------------------")
-    core.hello_from_core_module_a()
-    core.hello_from_core_module_b()
-    utils.hello_from_utils()
-    drivers.hello_from_ina236()
-    print(f"----------------------------------")
+def run_app(config:Config) -> None:
+    print("Running run_app")
+
+    print(f"config = {config.config}")
+    print(f"pyproject.toml = {config.pyproject_config}")
 
 if __name__ == "__main__":
     main()
