@@ -21,9 +21,9 @@ class Config:
 
     DEFAULT_CONFIG = {
         'template': {
-            'template_name': "cliapp",
+            'template_name': "pymodule",
             'template_version': "0.2.0",
-            'template_description': { 'text': """Template with CLI interface, configuration options in file and unit tests""", 'content-type': "text/plain" }
+            'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'logging': {
             'verbose': True
