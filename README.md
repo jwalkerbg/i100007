@@ -26,6 +26,10 @@ src
             # driver files, can be in subdirectories
             __init__.py
             ina236.py
+        logger
+            # application logger
+            __init__.py
+            logger_module.py
         utils
             __init__.py
             utilities.py
@@ -165,7 +169,23 @@ These packages can be also uploaded at [PyPI](https://pypi.org/) for distributio
 The coniguration system of the module is implemented in `core/config.py`. It is organized at three levels:
 
 * default settings, hard-coded in the source of the module
-* configuration file, by default `config.toml`
+* configuration file, by default `config.toml` in current directory
+* command line options
+
+The line of priority is (lowest) `default settings` -> `configuration file` -> `command line options` (highest).
+
+Default configuration is in `pymodule.core.config.py`. Configuration file is in `toml` format. There are lots of information about `toml` files in the Internet. Command line options are implemented in `pymodule.cli.app`.
+
+Application configuration is implemented in `pymodule.core.config in `class Config`.
+
+The default configuration comes with information about `pymodule` template meta data: template name, version and description. This information can be used by application to know what template they lay over. This information should not be altered.
+
+Logging configuration is in `logging`. It can be changed with other values in the configuration file or with CLI option. By now, one option is available - `--verbose`.
+
+Application options consist of two example options - `param` and `param2` from type `int`. They are here to demonstrate the implementation. These options are in configuration options and at CLI.
+
+## Logger
+
 
 ## Unit tests
 
@@ -244,3 +264,19 @@ To run unit tests with test coverage execute following command from the root of 
 Since MS Visual Studio Code 1.94 its is possible to run tests + coverage from left palette, from testting pane. You can run tests, debug tests and run tests with test coverage. Additional value from such running is that Test cpverage pane is updated with percents of coverage of each python module + small graphics showing module state. Test explorer show all tests and makes easy to select which tests to execute. Project explorer alse have mrks about percents fo test coverage.
 
 The project must be installed par example with `pip install -e .` to work with tests.
+
+## Start a new project from pymodule
+
+1. Rename `src/pymodule` to `src/my_application_module_name` by
+
+    `git mv pymodule application_module_name`
+2. Edit `pyproject.py`. Change `pymodule` to the real application name.
+
+3. Edit other parts of `pyproject.py` as needed for the application.
+
+4. Do not change following sections:
+
+    * `[build-system]`
+    * `[tool.setuptools]`
+    * `[tool.setuptools.packages.find]`
+    * `[tool.pytest.ini_options]`
