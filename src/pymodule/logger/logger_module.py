@@ -44,11 +44,12 @@ console_handler.setFormatter(custom_formatter)
 
 # Add handlers to the logger
 logger.addHandler(console_handler)
-# uncomment if you want application slogger to write to a string too
-# logger.addHandler(string_handler)
 
 def getAppLogger() -> logging.Logger:
     return logger
+
+def addStringHandler():
+    logger.addHandler(string_handler)
 
 def getAreaLogger(area_tag:str, toString:bool=False) -> logging.Logger:
     if not area_tag or len(area_tag) == 0:
