@@ -29,31 +29,17 @@ class StringHandler(logging.Handler):
     def clear_logs(self):
         self.log_messages = []
 
-# Logger Setup
-logger = logging.getLogger(TAGNAME)
-logger.setLevel(logging.INFO)
-
 # Create the custom formatter and string handler
 custom_formatter = CustomFormatter()
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(custom_formatter)
 string_handler = StringHandler()
 string_handler.setFormatter(custom_formatter)
 
-# Console handler (for immediate output)
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(custom_formatter)
-
-# Add handlers to the logger
-logger.addHandler(console_handler)
-
-def getAppLogger() -> logging.Logger:
-    return logger
-
-def addStringHandler():
-    logger.addHandler(string_handler)
-
-def getAreaLogger(area_tag:str, toString:bool=False) -> logging.Logger:
+def getAppLogger(area_tag:str, toString:bool=False) -> logging.Logger:
     if not area_tag or len(area_tag) == 0:
         return None
+    print(f"Added logger = {area_tag}")
     lg = logging.getLogger(area_tag)
     lg.setLevel(logging.INFO)
     lg.addHandler(console_handler)
@@ -61,3 +47,6 @@ def getAreaLogger(area_tag:str, toString:bool=False) -> logging.Logger:
         lg.addHandler(string_handler)
 
     return lg
+
+def addStringHandler(lg:logging.Logger) -> None:
+    lg.addHandler(string_handler)

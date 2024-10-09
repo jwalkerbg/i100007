@@ -6,9 +6,9 @@ import pymodule.core.core_module_b
 import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
-from pymodule.logger import getAppLogger, getAreaLogger
+from pymodule.logger import getAppLogger
 
-logger = getAppLogger()
+logger = getAppLogger(__name__)
 
 def parse_args():
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
@@ -59,6 +59,8 @@ def run_app(config:Config) -> None:
     pymodule.core.core_module_a.goodbye_from_core_module_a()
     pymodule.core.core_module_b.hello_from_core_module_b()
     pymodule.core.core_module_b.goodbye_from_core_module_b()
+    pymodule.utils.hello_from_utils()
+    pymodule.drivers.hello_from_ina236()
 
 if __name__ == "__main__":
     main()

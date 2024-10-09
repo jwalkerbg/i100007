@@ -1,4 +1,8 @@
 # utils/utilities.py
 
+from pymodule.logger import getAppLogger
+
+logger = getAppLogger(__name__)
+
 def hello_from_utils() ->  None:
-    print(f"Hello from utils")
+    logger.info(f"Hello from utils")

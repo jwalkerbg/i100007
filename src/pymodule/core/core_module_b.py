@@ -1,8 +1,8 @@
 # core/core_module_b.py
 
-from pymodule.logger import getAppLogger, getAreaLogger
+from pymodule.logger import getAppLogger
 
-logger = getAreaLogger("module_b")
+logger = getAppLogger(__name__)
 
 def hello_from_core_module_b() -> int:
     logger.info(f"Hello from core_module_b")
