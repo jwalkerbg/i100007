@@ -10,23 +10,25 @@ The directory structure is as follows (this is an example, if in a given project
 
 ```
 src
-    # projects sources, distributed in modules
-    cli
-        # command line entry points
-        app.py
-    core
-        # modules that expose API interface to applications
+    pymodule    # name of the module, will be used as a name of the directory where the module will be installed
         __init__.py
-        config.py
-        core_module_a.py
-        core_module_b.py
-    drivers
-        # driver files, can be in subdirectories
-        __init__.py
-        ina236.py
-    utils
-        __init__.py
-        utilities.py
+        # projects sources, distributed in modules
+        cli
+            # command line entry points
+            app.py
+        core
+            # modules that expose API interface to applications
+            __init__.py
+            config.py
+            core_module_a.py
+            core_module_b.py
+        drivers
+            # driver files, can be in subdirectories
+            __init__.py
+            ina236.py
+        utils
+            __init__.py
+            utilities.py
 tests
     # test files for modules in other :
     test_core_module_a.py
@@ -158,6 +160,13 @@ At last, **pymodule-0.1.0-py3-none-any.whl** can be installed outside the virtua
 
 These packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milky Way Galaxy.
 
+## Configuration system.
+
+The coniguration system of the module is implemented in `core/config.py`. It is organized at three levels:
+
+* default settings, hard-coded in the source of the module
+* configuration file, by default `config.toml`
+
 ## Unit tests
 
 ### Configuration
@@ -225,3 +234,13 @@ This configures `pytest` to:
 * Discover test classes and functions starting with `Test` and `test_`.
 
 `pytest` has a lot of command-line options. For more information see the online [pytest documentation](https://docs.pytest.org/en/stable/).
+
+### Running tests with test coverage
+
+To run unit tests with test coverage execute following command from the root of the project.
+
+`pytest --cov=.`
+
+Since MS Visual Studio Code 1.94 its is possible to run tests + coverage from left palette, from testting pane. You can run tests, debug tests and run tests with test coverage. Additional value from such running is that Test cpverage pane is updated with percents of coverage of each python module + small graphics showing module state. Test explorer show all tests and makes easy to select which tests to execute. Project explorer alse have mrks about percents fo test coverage.
+
+The project must be installed par example with `pip install -e .` to work with tests.
