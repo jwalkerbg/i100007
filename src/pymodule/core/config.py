@@ -5,7 +5,9 @@ from typing import Dict, Any
 import argparse
 import importlib.resources as resources
 
-from pymodule.logger.logger_module import logger, string_handler
+from pymodule.logger import getAppLogger, getAreaLogger
+
+logger = getAppLogger()
 
 # Check Python version at runtime
 if sys.version_info >= (3, 11):

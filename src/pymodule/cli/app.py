@@ -5,9 +5,10 @@ import pymodule.core.core_module_a
 import pymodule.core.core_module_b
 import pymodule.utils.utilities
 import pymodule.drivers.ina236
-
 from pymodule.core.config import Config
-from pymodule.logger.logger_module import logger, string_handler
+from pymodule.logger import getAppLogger, getAreaLogger
+
+logger = getAppLogger()
 
 def parse_args():
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
