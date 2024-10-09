@@ -5,8 +5,10 @@ import pymodule.core.core_module_a
 import pymodule.core.core_module_b
 import pymodule.utils.utilities
 import pymodule.drivers.ina236
-
 from pymodule.core.config import Config
+from pymodule.logger import getAppLogger, getAreaLogger
+
+logger = getAppLogger()
 
 def parse_args():
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
@@ -40,7 +42,7 @@ def main():
     try:
         cfg.load_config_file(config_file)
     except Exception as e:
-        print(f"Error with loading configuration file. Giving up.")
+        logger.info(f"Error with loading configuration file. Giving up.")
         return
 
     # Step 4: Merge default config, config.json, and command-line arguments
@@ -50,9 +52,13 @@ def main():
     run_app(cfg)
 
 def run_app(config:Config) -> None:
-    print("Running run_app")
+    logger.info("Running run_app")
 
-    print(f"config = {config.config}")
+    logger.info(f"config = {config.config}")
+    pymodule.core.core_module_a.hello_from_core_module_a()
+    pymodule.core.core_module_a.goodbye_from_core_module_a()
+    pymodule.core.core_module_b.hello_from_core_module_b()
+    pymodule.core.core_module_b.goodbye_from_core_module_b()
 
 if __name__ == "__main__":
     main()

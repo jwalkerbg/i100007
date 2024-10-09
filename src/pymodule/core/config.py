@@ -5,6 +5,10 @@ from typing import Dict, Any
 import argparse
 import importlib.resources as resources
 
+from pymodule.logger import getAppLogger, getAreaLogger
+
+logger = getAppLogger()
+
 # Check Python version at runtime
 if sys.version_info >= (3, 11):
     import tomllib  # Use the built-in tomllib for Python 3.11+
@@ -48,24 +52,24 @@ class Config:
                     return tomli.load(f)  # Use tomli for Python 3.7 - 3.10
 
         except FileNotFoundError as e:
-            print(f"{e}")
+            logger.error(f"{e}")
             raise e  # Optionally re-raise the exception if you want to propagate it
         except (tomli.TOMLDecodeError if sys.version_info < (3, 11) else tomllib.TOMLDecodeError) as e:
-            print(f"Error: Failed to parse TOML file '{file_path}'. Invalid TOML syntax.")
+            logger.error(f"Error: Failed to parse TOML file '{file_path}'. Invalid TOML syntax.")
             raise e  # Re-raise the exception for further handling
         except Exception as e:
-            print(f"An unexpected error occurred while loading the TOML file: {e}")
+            logger.error(f"An unexpected error occurred while loading the TOML file: {e}")
             raise e  # Catch-all for any other unexpected exceptions
 
     def load_config_file(self, file_path: str="config.toml") -> None:
         # Convert None to default value of 'config.json'
         if file_path is None:
-            print(f"CFG: Using default '{file_path}'")
+            logger.error(f"CFG: Using default '{file_path}'")
             file_path = 'config.toml'
         try:
             config_file = self.load_toml(file_path=file_path)
         except Exception as e:
-            print(f"Exception when trying to load {file_path}: {e}")
+            logger.error(f"Exception when trying to load {file_path}: {e}")
             raise e
 
         self.deep_update(config=self.config, config_file=config_file)
