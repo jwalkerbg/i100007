@@ -1,6 +1,7 @@
 # logger.py
 
 # logger_module.py
+from typing import List
 import logging
 from datetime import datetime
 
@@ -49,3 +50,15 @@ def getAppLogger(area_tag:str, toString:bool=False) -> logging.Logger:
 
 def addStringHandler(lg:logging.Logger) -> None:
     lg.addHandler(string_handler)
+
+def disableStringHandler() -> None:
+    string_handler.addFilter(lambda record: False)
+
+def enableStringHandler() -> None:
+    string_handler.filters.clear()
+
+def getStringLogs() -> List[str]:
+    return string_handler.get_logs()
+
+def clearStringLogs() -> None:
+    string_handler.clear_logs()
