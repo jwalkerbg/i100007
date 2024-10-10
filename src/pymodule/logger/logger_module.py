@@ -39,7 +39,6 @@ string_handler.setFormatter(custom_formatter)
 def getAppLogger(area_tag:str, toString:bool=False) -> logging.Logger:
     if not area_tag or len(area_tag) == 0:
         return None
-    print(f"Added logger = {area_tag}")
     lg = logging.getLogger(area_tag)
     lg.setLevel(logging.INFO)
     lg.addHandler(console_handler)
