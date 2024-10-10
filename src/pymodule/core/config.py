@@ -61,7 +61,10 @@ class Config:
             logger.error(f"An unexpected error occurred while loading the TOML file: {e}")
             raise e  # Catch-all for any other unexpected exceptions
 
-    def load_config_file(self, file_path: str="config.toml") -> None:
+    def load_config_file(self, file_path: str="config.toml") -> Dict:
+        # skip the configuration file if an empty name is given
+        if file_path == '':
+            return {}
         # Convert None to default value of 'config.json'
         if file_path is None:
             logger.error(f"CFG: Using default '{file_path}'")

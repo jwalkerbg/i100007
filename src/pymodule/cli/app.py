@@ -15,7 +15,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides')
 
     # configuration file name
-    parser.add_argument('--config', type=str,default='config.toml',help="Name of the configuration file, default is 'config.toml'")
+    parser.add_argument('--config', type=str, dest='config', default='config.toml',help="Name of the configuration file, default is 'config.toml'")
+    parser.add_argument('--no-config', action='store_const', const='', dest='config', help="Do not use a configuration file (only defaults & options)")
 
     # parameters
     parser.add_argument('--param1', type=int, help="Parameter1")
