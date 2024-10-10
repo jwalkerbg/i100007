@@ -1,5 +1,26 @@
 # README.md
 
+- [README.md](#readmemd)
+  - [Introduction](#introduction)
+  - [Directory structure](#directory-structure)
+    - [Why is used directory "src"? Is it possible to use real project root? What is the benefit to use "src"?](#why-is-used-directory-src-is-it-possible-to-use-real-project-root-what-is-the-benefit-to-use-src)
+  - [Imports](#imports)
+  - [Virtual environment, installation, running](#virtual-environment-installation-running)
+    - [Virtual environment](#virtual-environment)
+    - [Editable installation](#editable-installation)
+    - [Editable installation plus unit tests](#editable-installation-plus-unit-tests)
+    - [Building package](#building-package)
+  - [Configuration system.](#configuration-system)
+  - [Logger](#logger)
+  - [Unit tests](#unit-tests)
+    - [Configuration](#configuration)
+    - [Running tests](#running-tests)
+    - [Writing Unit Tests](#writing-unit-tests)
+    - [`__init__.py` in Test Subdirectories (Optional)](#__init__py-in-test-subdirectories-optional)
+    - [Customizing Test Discovery](#customizing-test-discovery)
+    - [Running tests with test coverage](#running-tests-with-test-coverage)
+  - [Start a new project from pymodule](#start-a-new-project-from-pymodule)
+
 ## Introduction
 
 This project is a simple skeleton of Python importable module which has in addition CLI interface. It uses modern **pyproject.toml** and does not use **setup.py**.
