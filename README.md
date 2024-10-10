@@ -270,11 +270,10 @@ The project must be installed par example with `pip install -e .` to work with t
 1. Rename `src/pymodule` to `src/my_application_module_name` by
 
     `git mv pymodule application_module_name`
-2. Edit `pyproject.py`. Change `pymodule` to the real application name.
-
-3. Edit other parts of `pyproject.py` as needed for the application.
-
-4. Do not change following sections:
+1. Edit `pyproject.py`. Change `pymodule` to the real application name.
+1. Edit other parts of `pyproject.py` as needed for the application.
+1. Edit imports in `.py` files to use new `application_module_name`.
+1. Do not change following sections:
 
     * `[build-system]`
     * `[tool.setuptools]`
