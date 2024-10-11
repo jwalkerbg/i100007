@@ -18,14 +18,14 @@ def parse_args():
     parser.add_argument('--config', type=str, dest='config', default='config.toml',help="Name of the configuration file, default is 'config.toml'")
     parser.add_argument('--no-config', action='store_const', const='', dest='config', help="Do not use a configuration file (only defaults & options)")
 
-    # parameters
-    parser.add_argument('--param1', type=int, help="Parameter1")
-    parser.add_argument('--param2', type=int, help="Parameter2")
-
-    # Other general options can still be added
+    # Verbosity option
     verbosity_group = parser.add_mutually_exclusive_group()
     verbosity_group.add_argument('--verbose', dest='verbose', action='store_const', const=True, help='Enable verbose mode')
     verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const', const=False, help='Disable verbose mode')
+
+    # aplication options & parameters
+    parser.add_argument('--param1', type=int, help="Parameter1")
+    parser.add_argument('--param2', type=int, help="Parameter2")
 
     return parser.parse_args()
 
