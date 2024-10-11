@@ -3,7 +3,6 @@
 import unittest
 import pytest
 from pymodule import core
-#from pymodule.core.config import Config
 
 #############
 
