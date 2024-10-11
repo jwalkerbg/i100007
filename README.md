@@ -187,7 +187,7 @@ These packages can be also uploaded at [PyPI](https://pypi.org/) for distributio
 
 ## Configuration system.
 
-The coniguration system of the module is implemented in `core/config.py`. It is organized at three levels:
+The coniguration system of the module is implemented in `core/config.py` and `cli/app.py`. It is organized at three levels:
 
 * default settings, hard-coded in the source of the module
 * configuration file, by default `config.toml` in current directory
@@ -199,11 +199,13 @@ Default configuration is in `pymodule.core.config.py`. Configuration file is in 
 
 Application configuration is implemented in `pymodule.core.config` in `class Config`.
 
-The default configuration comes with information about `pymodule` template meta data: template name, version and description. This information can be used by application to know what template they lay on. This information should not be altered.
+The default configuration comes with information about `pymodule` template meta data: template name, version and description. This information can be used by application to know what template it lay on. This information should not be altered. Hoever, new configuration options can be added as needed. The configuration is presented as a `Dict` object `Config.DEFAULT_CONFIG`.
 
 Logging configuration is in `logging`. It can be changed with other values in the configuration file or with CLI option. By now, one option is available - `--verbose`.
 
 Application options consist of two example options - `param` and `param2` from type `int`. They are here to demonstrate the implementation. These options are in configuration options and at CLI.
+
+For consistency, each option on command line should have a configuration option in the default confiuration and/or the conifuration file.
 
 ## Logger
 
