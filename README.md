@@ -1,5 +1,26 @@
 # README.md
 
+- [README.md](#readmemd)
+  - [Introduction](#introduction)
+  - [Directory structure](#directory-structure)
+    - [Why is used directory "src"? Is it possible to use real project root? What is the benefit to use "src"?](#why-is-used-directory-src-is-it-possible-to-use-real-project-root-what-is-the-benefit-to-use-src)
+  - [Imports](#imports)
+  - [Virtual environment, installation, running](#virtual-environment-installation-running)
+    - [Virtual environment](#virtual-environment)
+    - [Editable installation](#editable-installation)
+    - [Editable installation plus unit tests](#editable-installation-plus-unit-tests)
+    - [Building package](#building-package)
+  - [Configuration system.](#configuration-system)
+  - [Logger](#logger)
+  - [Unit tests](#unit-tests)
+    - [Configuration](#configuration)
+    - [Running tests](#running-tests)
+    - [Writing Unit Tests](#writing-unit-tests)
+    - [`__init__.py` in Test Subdirectories (Optional)](#__init__py-in-test-subdirectories-optional)
+    - [Customizing Test Discovery](#customizing-test-discovery)
+    - [Running tests with test coverage](#running-tests-with-test-coverage)
+  - [Start a new project from pymodule](#start-a-new-project-from-pymodule)
+
 ## Introduction
 
 This project is a simple skeleton of Python importable module which has in addition CLI interface. It uses modern **pyproject.toml** and does not use **setup.py**.
@@ -10,23 +31,29 @@ The directory structure is as follows (this is an example, if in a given project
 
 ```
 src
-    # projects sources, distributed in modules
-    cli
-        # command line entry points
-        app.py
-    core
-        # modules that expose API interface to applications
+    pymodule    # name of the module, will be used as a name of the directory where the module will be installed
         __init__.py
-        config.py
-        core_module_a.py
-        core_module_b.py
-    drivers
-        # driver files, can be in subdirectories
-        __init__.py
-        ina236.py
-    utils
-        __init__.py
-        utilities.py
+        # projects sources, distributed in modules
+        cli
+            # command line entry points
+            app.py
+        core
+            # modules that expose API interface to applications
+            __init__.py
+            config.py
+            core_module_a.py
+            core_module_b.py
+        drivers
+            # driver files, can be in subdirectories
+            __init__.py
+            ina236.py
+        logger
+            # application logger
+            __init__.py
+            logger_module.py
+        utils
+            __init__.py
+            utilities.py
 tests
     # test files for modules in other :
     test_core_module_a.py
@@ -152,17 +179,84 @@ Mode                 LastWriteTime         Length Name
 -a----      2.10.2024 г.     12:23           3832 pymodule-0.1.0.tar.gz
 ```
 
-At last, **pymodule-0.1.0-py3-none-any.whl** can be installed outside the virtual environment, in other console even in other machine:
+At last, `pymodule-0.1.0-py3-none-any.whl` can be installed outside the virtual environment, in other console even in other machine:
 
 `pip install pymodule-0.1.0-py3-none-any.whl`
 
 These packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milky Way Galaxy.
 
+## Configuration system.
+
+The coniguration system of the module is implemented in `core/config.py` and `cli/app.py`. It is organized at three levels:
+
+* default settings, hard-coded in the source of the module
+* configuration file, by default `config.toml` in current directory
+* command line options
+
+The line of priority is (lowest) `default settings` -> `configuration file` -> `command line options` (highest).
+
+Default configuration is in `pymodule.core.config.py`. Configuration file is in `toml` format. There are lots of information about `toml` files in the Internet. Command line options are implemented in `pymodule.cli.app`.
+
+Application configuration is implemented in `pymodule.core.config` in `class Config`.
+
+The default configuration comes with information about `pymodule` template meta data: template name, version and description. This information can be used by application to know what template it lay on. This information should not be altered. Hoever, new configuration options can be added as needed. The configuration is presented as a `Dict` object `Config.DEFAULT_CONFIG`.
+
+Logging configuration is in `logging`. It can be changed with other values in the configuration file or with CLI option. By now, one option is available - `--verbose`.
+
+Application options consist of two example options - `param` and `param2` from type `int`. They are here to demonstrate the implementation. These options are in configuration options and at CLI.
+
+For consistency, each option on command line should have a configuration option in the default confiuration and/or the conifuration file.
+
+## Logger
+
+Logger module is a simple wrapper over the standard logger in `logging` module. It adds two classes
+
+* `class CustomFormatter` that has implementation of `format` member function
+* `class StringHandler` that writes log message into a string array.
+
+`CustomFormatter.format` defines the format of the log messages. If needed it can be edited.
+
+`StringHandler` overloads `emit` member function - it stores messages in internal array called `log_messages`. Two new member functions are added: `get_logs` to get the collected log messages and `clear_logs` to clear collected messages.
+
+Each program module that wants to produce log messages must import logger module by
+
+```
+from pymodule.logger import getAppLogger
+```
+
+Then creating module logger is
+
+```
+logger = getAppLogger(__name__)       # Here __name__ may be changed with any hardcoded string.
+```
+
+If a module wants to store log messages to a string along to console printing it should import the functions that handle log messages in `StringHandler`:
+
+```
+from pymodule.logger import getAppLogger, enableStringHandler, disableStringHandler, getStringLogs, clearStringLogs
+```
+
+and to create logger this way
+
+```
+logger = getAppLogger(__name__,True)
+```
+
+`enableStringHandler`, `disableStringHandler` and `clearStringLogs` are obvious.
+
+`getStringLogs` returns one big string with log messages separated by '\n'. To print them line by line following can be done
+
+```
+messages = getStringLogs().split('\n')
+for msg in messages:
+    print(msg)
+```
+
 ## Unit tests
 
 ### Configuration
 
-Units tests are exceuted by `pytest` module which have to be installed in the virtual enviroment of the project. How this is done is given in above sections.
+Units tests are executed by `pytest` module which have to be installed in the virtual enviroment of the project. How this is done is given in above sections.
 
 `pytest` automatically finds the tests. To know where to search, following must be given in `pyproject.toml`:
 
@@ -193,7 +287,7 @@ def hello_from_core_module_a() -> int:
     return 1
 ```
 
-The corresponding unit test in `tests/test_core_module_a.py` might look like this:
+The corresponding unit test in `tests/core/test_core_module_a.py` might look like this:
 
 ```python
 class TestCore_a(unittest.TestCase):
@@ -225,3 +319,28 @@ This configures `pytest` to:
 * Discover test classes and functions starting with `Test` and `test_`.
 
 `pytest` has a lot of command-line options. For more information see the online [pytest documentation](https://docs.pytest.org/en/stable/).
+
+### Running tests with test coverage
+
+To run unit tests with test coverage execute following command from the root of the project.
+
+`pytest --cov=.`
+
+Since MS Visual Studio Code 1.94 it is possible to run tests + coverage from left palette, from testing pane. You can run tests, debug tests and run tests with test coverage. Additional value from such running is that Test coverage pane is updated with percents of coverage of each python module + small graphics showing module state. Test explorer show all tests and makes easy to select which tests to execute. Project explorer alse have marks about percents for test coverage.
+
+The project must be installed par example with `pip install -e .` to work with tests.
+
+## Start a new project from pymodule
+
+1. Rename `src/pymodule` to `src/my_application_module_name` by
+
+    `git mv pymodule application_module_name`
+1. Edit `pyproject.py`. Change `pymodule` to the real application name.
+1. Edit other parts of `pyproject.py` as needed for the application.
+1. Edit imports in `.py` files to use new `application_module_name`.
+1. Do not change following sections:
+
+    * `[build-system]`
+    * `[tool.setuptools]`
+    * `[tool.setuptools.packages.find]`
+    * `[tool.pytest.ini_options]`

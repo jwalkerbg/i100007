@@ -5,8 +5,6 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pymodule"
 version = "0.1.0"
-template_name = "cliapp"
-template_version = "0.1.0"
 description = "Python module skeleton (please rename)"
 readme = { text = """This is a multi-line basic string.
 It allows for special characters such as \n for newlines and " for quotes.""", content-type = "text/plain" }
@@ -25,7 +23,8 @@ dependencies = [
     "numpy",
     "paho-mqtt",
     "jsonschema",
-    "rfc3986"
+    "rfc3986",
+    "tomli; python_version < '3.11'"
 ]
 
 # Optional dependencies section for development tools
@@ -54,7 +53,7 @@ where = ["src"]
 
 # Entry point for the CLI script
 [project.scripts]
-pymodule = "cli.app:main"
+pymodule = "pymodule.cli.app:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
