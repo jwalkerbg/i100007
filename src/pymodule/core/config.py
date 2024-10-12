@@ -3,6 +3,8 @@
 import sys
 from typing import Dict, Any
 import argparse
+import json
+from jsonschema import validate, ValidationError
 import importlib.resources as resources
 
 from pymodule.logger import getAppLogger
@@ -32,6 +34,36 @@ class Config:
             'param1': 1,
             'param2': 2
         }
+    }
+
+    # When adding / removing changing configuration parameters, change following validation approrpiately
+    CONFIG_SCHEMA = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+            "logging": {
+                "type": "object",
+                "properties": {
+                    "verbose": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": False
+            },
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "param1": {
+                        "type": "number"
+                    },
+                    "param2": {
+                        "type": "number"
+                    }
+                },
+                "additionalProperties": False
+            }
+        },
+        "additionalProperties": False
     }
 
     def load_toml(self,file_path) -> Dict:
@@ -71,6 +103,10 @@ class Config:
             file_path = 'config.toml'
         try:
             config_file = self.load_toml(file_path=file_path)
+            validate(instance=config_file, schema=self.CONFIG_SCHEMA)
+        except ValidationError as e:
+            logger.warning(f"Configuration validation error in {file_path}: {e}")
+            raise ValueError
         except Exception as e:
             logger.error(f"Exception when trying to load {file_path}: {e}")
             raise e
