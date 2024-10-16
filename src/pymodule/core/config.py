@@ -27,8 +27,11 @@ class Config:
             'template_version': "0.4.0",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
+        'metadata': {
+            'version': False
+        },
         'logging': {
-            'verbose': True
+            'verbose': False
         },
         'parameters': {
             'param1': 1,
@@ -41,6 +44,15 @@ class Config:
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
+            "metadata": {
+                "type": "object",
+                "properties": {
+                    "version": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": False
+            },
             "logging": {
                 "type": "object",
                 "properties": {
@@ -138,15 +150,19 @@ class Config:
 
     def merge_options(self, config_file:Dict, config_cli:argparse.Namespace=None) -> Dict:
         # handle CLI options if started from CLI interface
-        # replace param1 and para2 with actual parameters, defined in app:parse_args()
+        # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
+
+            logger.info(f"config_cli.app_version = {config_cli.app_version}")
+            if config_cli.app_version:
+                self.config['metadata']['version'] = True
+            # Handle general options
+            if config_cli.verbose:
+                self.config['logging']['verbose'] = config_cli.verbose
+
             if config_cli.param1:
                 self.config['parameters']['param1'] = config_cli.param1
             if config_cli.param2:
                 self.config['parameters']['param2'] = config_cli.param2
-
-            # Handle general options
-            if config_cli.verbose is not None:
-                self.config['logging']['verbose'] = config_cli.verbose
 
         return self.config
