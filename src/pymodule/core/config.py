@@ -31,7 +31,7 @@ class Config:
             'version': False
         },
         'logging': {
-            'verbose': True
+            'verbose': False
         },
         'parameters': {
             'param1': 1,
