@@ -44,6 +44,15 @@ class Config:
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
+            "metadata": {
+                "type": "object",
+                "properties": {
+                    "version": {
+                        "type": "boolean"
+                    }
+                },
+                "additionalProperties": False
+            },
             "logging": {
                 "type": "object",
                 "properties": {
