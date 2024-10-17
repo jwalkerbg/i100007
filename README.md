@@ -232,7 +232,7 @@ version = "major.minor.patch"
 
 Usually, an appliction programmer should not change template version (and name). It may do this only when upgrades the template the appliation project lays on.
 
-However, changing application version is up to the team that develop the project, followoing project's versioning policy.
+However, changing application version is up to the team that develop the project, following project's versioning policy.
 
 ### Print version information
 
