@@ -21,6 +21,7 @@ maintainers = [
 # Dependencies
 dependencies = [
     "numpy",
+    "importlib",
     "paho-mqtt",
     "jsonschema",
     "rfc3986",
