@@ -1,5 +1,6 @@
 # src/cli/app.py
 import argparse
+from importlib.metadata import version
 
 import pymodule.core.core_module_a
 import pymodule.core.core_module_b
@@ -17,6 +18,9 @@ def parse_args():
     # configuration file name
     parser.add_argument('--config', type=str, dest='config', default='config.toml',help="Name of the configuration file, default is 'config.toml'")
     parser.add_argument('--no-config', action='store_const', const='', dest='config', help="Do not use a configuration file (only defaults & options)")
+
+    # version
+    parser.add_argument('-v', dest='app_version', action='store_const', const=True, default=False, help='Show version information of the module')
 
     # Verbosity option
     verbosity_group = parser.add_mutually_exclusive_group()
@@ -54,17 +58,22 @@ def main():
 
 # CLI application main function with collected options & configuration
 def run_app(config:Config) -> None:
-    try:
-        logger.info("Running run_app")
-        logger.info(f"config = {config.config}")
-        pymodule.core.core_module_a.hello_from_core_module_a()
-        pymodule.core.core_module_a.goodbye_from_core_module_a()
-        pymodule.core.core_module_b.hello_from_core_module_b()
-        pymodule.core.core_module_b.goodbye_from_core_module_b()
-        pymodule.utils.hello_from_utils()
-        pymodule.drivers.hello_from_ina236()
-    finally:
-        logger.info("Exiting run_app")
+    if config.config['metadata']['version']:
+        app_version = version("pymodule")
+        print(f"pymodule {app_version}")
+    else:
+        try:
+            # Add real application code here.
+            logger.info(f"Running run_app")
+            logger.info(f"config = {config.config}")
+            pymodule.core.core_module_a.hello_from_core_module_a()
+            pymodule.core.core_module_a.goodbye_from_core_module_a()
+            pymodule.core.core_module_b.hello_from_core_module_b()
+            pymodule.core.core_module_b.goodbye_from_core_module_b()
+            pymodule.utils.hello_from_utils()
+            pymodule.drivers.hello_from_ina236()
+        finally:
+            logger.info("Exiting run_app")
 
 if __name__ == "__main__":
     main()
