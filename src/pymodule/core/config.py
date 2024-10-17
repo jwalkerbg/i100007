@@ -153,7 +153,6 @@ class Config:
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
 
-            logger.info(f"config_cli.app_version = {config_cli.app_version}")
             if config_cli.app_version:
                 self.config['metadata']['version'] = True
             # Handle general options
