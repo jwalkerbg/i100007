@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('--no-config', action='store_const', const='', dest='config', help="Do not use a configuration file (only defaults & options)")
 
     # version
-    parser.add_argument('-v', dest='app_version', action='store_const', const=True, default=False, help='Show version information of the module')
+    parser.add_argument('-v', dest='app_version', action='store_true', help='Show version information of the module')
 
     # Verbosity option
     verbosity_group = parser.add_mutually_exclusive_group()

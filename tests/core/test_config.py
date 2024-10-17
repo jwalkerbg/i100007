@@ -125,17 +125,19 @@ class TestConfig:
         """
         Test the merge_options function with CLI arguments.
         """
-        cli_args = argparse.Namespace(param1=10, param2=20, verbose=False)
+        cli_args = argparse.Namespace(param1=10, param2=20, verbose=False, app_version=False)
         config_file = {
             'parameters': {'param1': 1, 'param2': 2},
-            'logging': {'verbose': True}
+            'logging': {'verbose': False},
+            'metadata': { 'version': False },
         }
         config_instance.config = config_file  # Simulate loaded config
         merged_config = config_instance.merge_options(config_file, cli_args)
 
         expected_config = {
-            'parameters': {'param1': 10, 'param2': 20},  # CLI args should override
-            'logging': {'verbose': False}  # CLI arg should override
+            'parameters': {'param1': 10, 'param2': 20 },  # CLI args should override
+            'logging': {'verbose': False},  # CLI arg should override
+            'metadata': { 'version': False }
         }
         assert merged_config == expected_config
 
@@ -143,15 +145,19 @@ class TestConfig:
         """
         Test merge_options with no CLI arguments (None).
         """
+        cli_args = argparse.Namespace(verbose=False, app_version=False, param1=None, param2=None)
         config_file = {
             'parameters': {'param1': 1, 'param2': 2},
-            'logging': {'verbose': True}
+            'logging': {'verbose': False},
+            'metadata': {'version': False}
         }
         config_instance.config = config_file  # Simulate loaded config
-        merged_config = config_instance.merge_options(config_file, None)
+        merged_config = config_instance.merge_options(config_file, cli_args)
 
         expected_config = {
             'parameters': {'param1': 1, 'param2': 2},
-            'logging': {'verbose': True}
+            'logging': {'verbose': False},
+            'metadata': { 'version': False }
+
         }
         assert merged_config == expected_config  # No changes without CLI args

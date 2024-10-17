@@ -153,15 +153,15 @@ class Config:
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
 
-            if config_cli.app_version:
-                self.config['metadata']['version'] = True
+            if config_cli.app_version is not None:
+                self.config['metadata']['version'] = config_cli.app_version
             # Handle general options
-            if config_cli.verbose:
+            if config_cli.verbose is not None:
                 self.config['logging']['verbose'] = config_cli.verbose
 
-            if config_cli.param1:
+            if config_cli.param1 is not None:
                 self.config['parameters']['param1'] = config_cli.param1
-            if config_cli.param2:
+            if config_cli.param2 is not None:
                 self.config['parameters']['param2'] = config_cli.param2
 
         return self.config
