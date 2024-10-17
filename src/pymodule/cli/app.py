@@ -53,27 +53,27 @@ def main():
     # Step 4: Merge default config, config.json, and command-line arguments
     cfg.merge_options(cfg.config, args)
 
-    # Step 5: Run the application with collected configuration
-    run_app(cfg)
-
-# CLI application main function with collected options & configuration
-def run_app(config:Config) -> None:
-    if config.config['metadata']['version']:
+    # Step 5: Show version info or run the application with collected configuration
+    if cfg.config['metadata']['version']:
         app_version = version("pymodule")
         print(f"pymodule {app_version}")
     else:
-        try:
-            # Add real application code here.
-            logger.info(f"Running run_app")
-            logger.info(f"config = {config.config}")
-            pymodule.core.core_module_a.hello_from_core_module_a()
-            pymodule.core.core_module_a.goodbye_from_core_module_a()
-            pymodule.core.core_module_b.hello_from_core_module_b()
-            pymodule.core.core_module_b.goodbye_from_core_module_b()
-            pymodule.utils.hello_from_utils()
-            pymodule.drivers.hello_from_ina236()
-        finally:
-            logger.info("Exiting run_app")
+        run_app(cfg)
+
+# CLI application main function with collected options & configuration
+def run_app(config:Config) -> None:
+    try:
+        # Add real application code here.
+        logger.info(f"Running run_app")
+        logger.info(f"config = {config.config}")
+        pymodule.core.core_module_a.hello_from_core_module_a()
+        pymodule.core.core_module_a.goodbye_from_core_module_a()
+        pymodule.core.core_module_b.hello_from_core_module_b()
+        pymodule.core.core_module_b.goodbye_from_core_module_b()
+        pymodule.utils.hello_from_utils()
+        pymodule.drivers.hello_from_ina236()
+    finally:
+        logger.info("Exiting run_app")
 
 if __name__ == "__main__":
     main()
