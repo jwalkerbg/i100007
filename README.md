@@ -11,6 +11,9 @@
     - [Editable installation plus unit tests](#editable-installation-plus-unit-tests)
     - [Building package](#building-package)
   - [Configuration system.](#configuration-system)
+  - [Version information](#version-information)
+    - [Versions](#versions)
+    - [Print version information](#print-version-information)
   - [Logger](#logger)
   - [Unit tests](#unit-tests)
     - [Configuration](#configuration)
@@ -21,9 +24,10 @@
     - [Running tests with test coverage](#running-tests-with-test-coverage)
   - [Start a new project from pymodule](#start-a-new-project-from-pymodule)
 
+
 ## Introduction
 
-This project is a simple skeleton of Python importable module which has in addition CLI interface. It uses modern **pyproject.toml** and does not use **setup.py**.
+This project is a simple skeleton of Python importable module which has in addition CLI interface. It uses modern `pyproject.toml` and does not use `setup.py`.
 
 ## Directory structure
 
@@ -46,7 +50,7 @@ src
         drivers
             # driver files, can be in subdirectories
             __init__.py
-            ina236.py
+            ina236.py       # exaple driver module; can have separate diretories for drivers
         logger
             # application logger
             __init__.py
@@ -207,6 +211,37 @@ Application options consist of two example options - `param` and `param2` from t
 
 For consistency, each option on command line should have a configuration option in the default confiuration and/or the conifuration file.
 
+## Version information
+
+### Versions
+
+This template project offers two versions:
+
+* version of the template
+* version of the application developed based on this template
+
+The version of the template is stored in `config.py` in `Config.DEFAULT_CONFIG'template']['template_version'] as a string. This string should be of type `major.minor.patch`.
+
+The version of the application is in `pyproject.toml` in `[project.version]`:
+
+```toml
+[project]
+name = "name_of_ the _project"
+version = "major.minor.patch"
+```
+
+Usually, an appliction programmer should not change template version (and name). It may do this only when upgrades the template the appliation project lays on.
+
+However, changing application version is up to the team that develop the project, followoing project's versioning policy.
+
+### Print version information
+
+The version information of the application can be seen when the option `-v` is given at the command line. This version overrides all other options except `--config`. When `-v` presents at the command line the version is printed and the application exits. There is no way the version information to be printed and then the normal program flow to begin. The format is
+
+```application_name major.minor.patch```
+
+There is no way to show / print template version.
+
 ## Logger
 
 Logger module is a simple wrapper over the standard logger in `logging` module. It adds two classes
@@ -338,6 +373,7 @@ The project must be installed par example with `pip install -e .` to work with t
 1. Edit `pyproject.py`. Change `pymodule` to the real application name.
 1. Edit other parts of `pyproject.py` as needed for the application.
 1. Edit imports in `.py` files to use new `application_module_name`.
+1. Everywhere change `pymodule` to the `application_module_name`.
 1. Do not change following sections:
 
     * `[build-system]`
