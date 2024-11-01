@@ -47,7 +47,7 @@ faq = "https://pymodule.example.com/faq"  # Custom URL key for FAQ
 
 # Example custom configuration for `setuptools`
 [tool.setuptools]
-package-dir = {"" = "src"}  # Single-quoted key for directory name
+package-dir = {'' = 'src'}  # Single-quoted key for directory name
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -58,4 +58,4 @@ pymodule = "pymodule.cli.app:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
+pythonpath = "src"
