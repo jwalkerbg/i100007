@@ -8,6 +8,7 @@ import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
+import cmodule
 
 logger = getAppLogger(__name__)
 
@@ -35,6 +36,8 @@ def parse_args():
 
 def main():
     """Main entry point of the CLI."""
+
+    cmodule.print_hello()
 
     # Step 1: Create config object with default configuration
     cfg = Config()
