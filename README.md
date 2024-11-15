@@ -15,6 +15,7 @@
     - [Versions](#versions)
     - [Print version information](#print-version-information)
   - [Logger](#logger)
+  - [C extensions](#c-extensions)
   - [Unit tests](#unit-tests)
     - [Configuration](#configuration)
     - [Running tests](#running-tests)
@@ -286,6 +287,35 @@ messages = getStringLogs().split('\n')
 for msg in messages:
     print(msg)
 ```
+
+## C extensions
+
+An example of C  extension is given `src/cmodules/cmodule.c`. One module is defined there and this module has only one function exposed to Python.
+
+C-side:
+
+* `cmodulemodule` - the module
+* `"print_hello"` - exported symbol to Python
+* `print_hello` - C function that is called when Python script calls `hello_world`.
+
+Python-side. Despite teh project is configured in `pyproject.toml` there is no support of C modules in it. Hope in some near future such support will be added. C extensions are declared in `setup.py`.
+
+* `setup.py`:
+  * `module = Extension(...)` - declares the extension
+  * `setup(...)` call sets-up (builds) the extension.
+
+Building C extension is part of building project with
+
+```bash
+python -m build
+```
+
+This is simplest variant. It is possible to create
+*  more extensions in a single C file.
+*  one extension to be in more that one C file
+*  more extemsioms each of them in its own C file
+
+[Extending Python with C or C++](https://docs.python.org/3/extending/extending.html)
 
 ## Unit tests
 
