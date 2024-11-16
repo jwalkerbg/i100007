@@ -2,6 +2,7 @@
 import argparse
 from importlib.metadata import version
 
+import pymodule
 import pymodule.core.core_module_a
 import pymodule.core.core_module_b
 import pymodule.utils.utilities
@@ -36,6 +37,9 @@ def parse_args():
 def main():
     """Main entry point of the CLI."""
 
+    pymodule.hellocyth.say_hello()
+    logger.info(f"fibonacci(10) = {pymodule.hellocyth.fibonacci(10)}")
+
     # Step 1: Create config object with default configuration
     cfg = Config()
 
@@ -64,6 +68,7 @@ def main():
 def run_app(config:Config) -> None:
     try:
         # Add real application code here.
+        pymodule.hellocyth.say_hello()
         logger.info(f"Running run_app")
         logger.info(f"config = {config.config}")
         pymodule.core.core_module_a.hello_from_core_module_a()

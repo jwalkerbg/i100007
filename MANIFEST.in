@@ -1,3 +1,4 @@
 include README.md
 include config.json
 include config.toml
+recursive-include src/pymodule *.pyx
