@@ -4,7 +4,7 @@
 
 // Function to print a message
 static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
-    printf("Hello to Python world from C world! I am CModule A\n");
+    printf("Hello to Python world from C world! I am CModule A!\n");
     Py_RETURN_NONE;
 }
 
