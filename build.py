@@ -38,6 +38,7 @@ def build_cython_extensions():
     config = read_cython_path()
     cython_path = config.get("cython_path", "cython")
     c_ext_path = config.get("c_ext_path", "c_ext")
+    include_dirs = config.get("include_dirs", [])
     print(f"Using Cython path: {cython_path}, c_ext path: {c_ext_path}")
 
     if os.name == "nt":  # Windows
@@ -55,11 +56,10 @@ def build_cython_extensions():
         ]
     extra_compile_args.append("-UNDEBUG")  # Cython disables asserts by default.
     # Relative to project root director
-    include_dirs = [
-        "src/pymodule/",
-        "src/pymodule/cyth/",
-        "src/pymodule/c_src/",
-    ]
+    if isinstance(include_dirs, str):
+        include_dirs = [dir.strip() for dir in include_dirs.split(",")]
+    else:
+        include_dirs = [str(Path(dir)) for dir in include_dirs]
 
     # Dynamically find all .pyx files in the cyth directory
     pyx_files = list(Path(cython_path).rglob("*.pyx"))

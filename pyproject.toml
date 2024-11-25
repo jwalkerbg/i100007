@@ -40,6 +40,7 @@ pymodule = "pymodule.cli.app:main"
 [tool.build.config]
 cython_path = "src/pymodule/cyth"
 c_ext_path = "src/pymodule/c_ext"
+include_dirs = ["src/pymodule/include", "src/include"]
 
 [build-system]
 requires = ["poetry-core", "setuptools", "Cython"]
