@@ -1,4 +1,4 @@
-# src/pypoetry/cyth/worker.pyx
+# src/pymodule/cyth/worker.pyx
 
 def worker_func():
     print("Worker")
