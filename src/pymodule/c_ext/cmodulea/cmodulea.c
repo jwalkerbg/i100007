@@ -1,10 +1,13 @@
 #include <Python.h>
 
 #include <pymodule.h>
+#include "cmodulea.h"
 
 // Function to print a message
 static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
+
     printf("Hello to Python world from C world! I am CModule A!\n");
+    hello_from_utils("cmodulea");
     Py_RETURN_NONE;
 }
 
