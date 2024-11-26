@@ -11,7 +11,7 @@ from pymodule.logger import getAppLogger
 from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea
 from pymodule.c_ext.cmoduleb.cmoduleb import print_hello_cmoduleb
 from pymodule.cyth.hello_world import hello
-from pymodule.cyth.worker import worker_func
+from pymodule.cyth.worker import worker_func, cython_benchmark
 
 logger = getAppLogger(__name__)
 
@@ -80,8 +80,23 @@ def run_app(config:Config) -> None:
         print_hello_cmoduleb()
         print(f"{hello()}")
         worker_func()
+
+        python_benchmark(1000)
+        cython_benchmark(1000)
+        # c_benchmark(1000)
+
     finally:
         logger.info("Exiting run_app")
+
+import time
+
+def python_benchmark(n):
+    start_time = time.time()
+    result = sum(i * i for i in range(n))
+    end_time = time.time()
+    print(f"Python function executed in {end_time - start_time:.6f} seconds")
+    return result
+
 
 if __name__ == "__main__":
     main()
