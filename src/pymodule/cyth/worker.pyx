@@ -16,7 +16,8 @@ def cython_benchmark(int n):
     result = 0
     for i in range(n):
         result += i * i
-    
+
     end_time = time.time()
-    print(f"Cython function executed in {end_time - start_time:.6f} seconds")
-    return result
+    diff = ((end_time - start_time) * 1000.0)
+    print(f"Cython function executed in {diff:03.6f} milliseconds")
+    return diff

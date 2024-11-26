@@ -33,7 +33,7 @@ static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
 static PyObject* c_benchmark(PyObject* self, PyObject* args) {
     int n;
     long long result = 0;
-    
+
     // Parse the input argument to get the integer n
     if (!PyArg_ParseTuple(args, "i", &n)) {
         return NULL;
@@ -42,28 +42,29 @@ static PyObject* c_benchmark(PyObject* self, PyObject* args) {
     // Query the frequency of the performance counter
     LARGE_INTEGER frequency;
     QueryPerformanceFrequency(&frequency);  // Get the frequency of the performance counter
-    
+
     // Get the start time using QueryPerformanceCounter()
     LARGE_INTEGER start_time;
     QueryPerformanceCounter(&start_time);
-    
+
     // Perform the sum of squares calculation in a loop
     for (int i = 0; i < n; i++) {
         result += (i * i);
     }
-    
+
     // Get the end time using QueryPerformanceCounter()
     LARGE_INTEGER end_time;
     QueryPerformanceCounter(&end_time);
-    
+
     // Calculate the time taken in microseconds
     double time_taken = (end_time.QuadPart - start_time.QuadPart) * 1000000.0 / frequency.QuadPart;
+    double dtt = time_taken;
 
     // Print the time it took (in microseconds)
-    printf("C function executed in %.6f microseconds\n", time_taken);
-    
+    printf("C function executed in %.6f microseconds;%d, %lld, %lld, %lld\n", time_taken,n,result,start_time.QuadPart,end_time.QuadPart);
+
     // Return the result as a Python long object
-    return PyLong_FromLongLong(result);
+    return PyFloat_FromDouble(dtt);
 }
 
 // Method table for the module

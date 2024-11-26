@@ -81,9 +81,14 @@ def run_app(config:Config) -> None:
         print(f"{hello()}")
         worker_func()
 
-        python_benchmark(90000)
-        cython_benchmark(90000)
-        c_benchmark(90000)
+        logger.info(f"Benchmarks:")
+        pdiff = python_benchmark(500000)
+        ydiff = cython_benchmark(500000)
+        cdiff = c_benchmark(500000)
+
+        print(f"Python = 100.0%")
+        print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
+        print(f"C      = {(((cdiff) / (1000.0*pdiff))*100.0)}%")
 
     finally:
         logger.info("Exiting run_app")
@@ -94,8 +99,9 @@ def python_benchmark(n):
     start_time = time.time()
     result = sum(i * i for i in range(n))
     end_time = time.time()
-    print(f"Python function executed in {end_time - start_time:.6f} seconds")
-    return result
+    diff = ((end_time - start_time) * 1000.0)
+    print(f"Python function executed in {diff:03.6f} milliseconds")
+    return diff
 
 
 if __name__ == "__main__":
