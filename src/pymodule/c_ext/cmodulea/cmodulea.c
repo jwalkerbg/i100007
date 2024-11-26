@@ -1,7 +1,25 @@
 #include <Python.h>
 
 #include <pymodule.h>
+#include <time.h>
+#include <stdint.h>
 #include "cmodulea.h"
+
+typedef uint32_t DWORD;
+typedef int32_t LONG;
+typedef int64_t LONGLONG;
+
+typedef union _LARGE_INTEGER {
+  struct {
+    DWORD LowPart;
+    LONG  HighPart;
+  } DUMMYSTRUCTNAME;
+  struct {
+    DWORD LowPart;
+    LONG  HighPart;
+  } u;
+  LONGLONG QuadPart;
+} LARGE_INTEGER;
 
 // Function to print a message
 static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
@@ -13,31 +31,39 @@ static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
 
 // The C function for benchmarking that accepts an integer and returns void
 static PyObject* c_benchmark(PyObject* self, PyObject* args) {
-    int input_number;
-
-    // Parse the input argument as an integer
-    if (!PyArg_ParseTuple(args, "i", &input_number)) {
-        return NULL;  // Error if parsing fails
+    int n;
+    long long result = 0;
+    
+    // Parse the input argument to get the integer n
+    if (!PyArg_ParseTuple(args, "i", &n)) {
+        return NULL;
     }
 
-    // Start the benchmark (you can use time functions to measure performance)
-    clock_t start_time = clock();
-
-    // Perform some operation with the input (for example, a simple loop)
-    for (int i = 0; i < input_number; ++i) {
-        // Dummy operation: just incrementing i
-        int temp = i * 2;  // This is just to simulate a computation
+    // Query the frequency of the performance counter
+    LARGE_INTEGER frequency;
+    QueryPerformanceFrequency(&frequency);  // Get the frequency of the performance counter
+    
+    // Get the start time using QueryPerformanceCounter()
+    LARGE_INTEGER start_time;
+    QueryPerformanceCounter(&start_time);
+    
+    // Perform the sum of squares calculation in a loop
+    for (int i = 0; i < n; i++) {
+        result += (i * i);
     }
+    
+    // Get the end time using QueryPerformanceCounter()
+    LARGE_INTEGER end_time;
+    QueryPerformanceCounter(&end_time);
+    
+    // Calculate the time taken in microseconds
+    double time_taken = (end_time.QuadPart - start_time.QuadPart) * 1000000.0 / frequency.QuadPart;
 
-    // Stop the benchmark
-    clock_t end_time = clock();
-    double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC;  // seconds
-
-    // Print the result to the Python console (this is optional)
-    printf("Benchmark with %d iterations took %f seconds\n", input_number, time_taken);
-
-    // Return None to indicate a void return type
-    Py_RETURN_NONE;
+    // Print the time it took (in microseconds)
+    printf("C function executed in %.6f microseconds\n", time_taken);
+    
+    // Return the result as a Python long object
+    return PyLong_FromLongLong(result);
 }
 
 // Method table for the module

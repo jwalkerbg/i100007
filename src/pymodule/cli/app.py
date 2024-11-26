@@ -8,7 +8,7 @@ import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
-from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea
+from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea, c_benchmark
 from pymodule.c_ext.cmoduleb.cmoduleb import print_hello_cmoduleb
 from pymodule.cyth.hello_world import hello
 from pymodule.cyth.worker import worker_func, cython_benchmark
@@ -81,9 +81,9 @@ def run_app(config:Config) -> None:
         print(f"{hello()}")
         worker_func()
 
-        python_benchmark(1000)
-        cython_benchmark(1000)
-        # c_benchmark(1000)
+        python_benchmark(90000)
+        cython_benchmark(90000)
+        c_benchmark(90000)
 
     finally:
         logger.info("Exiting run_app")
