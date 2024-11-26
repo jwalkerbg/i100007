@@ -2,12 +2,15 @@ import os
 import sys
 import shutil
 from pathlib import Path
-# Check Python version at runtime
+import logging
 
+# Check Python version at runtime
 if sys.version_info >= (3, 11):
     import tomllib as toml  # Use the built-in tomllib for Python 3.11+
 else:
     import tomli as toml    # Use the external tomli for Python 3.7 to 3.10
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Uncomment if library can still function if extensions fail to compile (e.g. slower, python fallback).
 # Don't allow failure if cibuildwheel is running.
@@ -75,35 +78,40 @@ def build_cython_extensions():
     ]
 
     # Dynamically find all .c files in the cyth directory
-    c_files = list(Path(c_ext_path).rglob("*.c"))
-    c_extensions = [
-        Extension(
-            c_file.stem,
-            [str(c_file)],
-            include_dirs=include_dirs,
-            extra_compile_args=extra_compile_args,
-            language="c"
-        )
-        for c_file in c_files
-    ]
+    root_path = Path(c_ext_path)
+    c_extensions = []
+    for subdir in root_path.iterdir():
+        c_files = []
+        if subdir.is_dir():
+            # Recursively get all .c files for the current module
+            c_files = list(subdir.rglob("*.c"))
+        if c_files:
+            c_extensions.append(
+                Extension(
+                    str(subdir.name),
+                    [str(c_file) for c_file in c_files],
+                    include_dirs=include_dirs,
+                    extra_compile_args=extra_compile_args,
+                    language="c"
+                )
+            )
 
-    print(f"c_extensions: {c_extensions}")
+    logging.info(f"c_extensions: {c_extensions}")
 
     extensions.extend(c_extensions)
 
     # Log discovered extensions
-    print(f"Discovered .pyx files: {pyx_files}")
-    print(f"Discovered .c files: {c_files}")
-    print(f"Creating Extensions: {[ext.name for ext in extensions]}")
+    logging.info(f"Discovered .pyx files: {pyx_files}")
+    logging.info(f"Creating Extensions: {[ext.name for ext in extensions]}")
 
     include_dirs = set()
     for extension in extensions:
         include_dirs.update(extension.include_dirs)
     include_dirs = list(include_dirs)
 
-    print("Cythonizing.....")
+    logging.info("Cythonizing.....")
     ext_modules = cythonize(extensions, include_path=include_dirs, language_level=3, annotate=True)
-    print("End of Cythonizing")
+    logging.info("End of Cythonizing")
     dist = Distribution({"ext_modules": ext_modules})
     cmd = build_ext(dist)
     cmd.ensure_finalized()
@@ -112,13 +120,13 @@ def build_cython_extensions():
     for output, src_path in zip(cmd.get_outputs(),cmd.get_source_files()):
         output = Path(output)
 
-        print(f"src_path: {src_path}")
+        logging.info(f"src_path: {src_path}")
         src_path = Path(src_path).parent
 
-        print(f"Generated file: {output}")
+        logging.info(f"Generated file: {output}")
         src_relative_path = Path(src_path) / output.name
         shutil.copyfile(output, src_relative_path)
-        print(f"Copied {output} to {src_relative_path}")
+        logging.info(f"Copied {output} to {src_relative_path}")
 
 def build(setup_kwargs):
     try:
