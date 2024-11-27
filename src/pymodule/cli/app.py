@@ -4,14 +4,15 @@ from importlib.metadata import version
 
 import pymodule.core.core_module_a
 import pymodule.core.core_module_b
+import pymodule.core.benchmark
 import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
-from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea, c_benchmark
+from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea
 from pymodule.c_ext.cmoduleb.cmoduleb import print_hello_cmoduleb
 from pymodule.cyth.hello_world import hello
-from pymodule.cyth.worker import worker_func, cython_benchmark
+from pymodule.cyth.worker import worker_func
 
 logger = getAppLogger(__name__)
 
@@ -81,27 +82,11 @@ def run_app(config:Config) -> None:
         print(f"{hello()}")
         worker_func()
 
-        logger.info(f"Benchmarks:")
-        pdiff = python_benchmark(500000)
-        ydiff = cython_benchmark(500000)
-        cdiff = c_benchmark(500000)
-
-        print(f"Python = 100.0%")
-        print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
-        print(f"C      = {(((cdiff) / (1000.0*pdiff))*100.0)}%")
-
+        pymodule.core.benchmark.benchmark(500000)
     finally:
         logger.info("Exiting run_app")
 
 import time
-
-def python_benchmark(n):
-    start_time = time.time()
-    result = sum(i * i for i in range(n))
-    end_time = time.time()
-    diff = ((end_time - start_time) * 1000.0)
-    print(f"Python function executed in {diff:03.6f} milliseconds")
-    return diff
 
 
 if __name__ == "__main__":

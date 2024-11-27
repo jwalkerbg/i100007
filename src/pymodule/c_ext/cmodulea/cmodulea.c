@@ -29,6 +29,8 @@ static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
     Py_RETURN_NONE;
 }
 
+static int c_fibonacci(int n);
+
 // The C function for benchmarking that accepts an integer and returns void
 static PyObject* c_benchmark(PyObject* self, PyObject* args) {
     int n;
@@ -49,7 +51,7 @@ static PyObject* c_benchmark(PyObject* self, PyObject* args) {
 
     // Perform the sum of squares calculation in a loop
     for (int i = 0; i < n; i++) {
-        result += (i * i);
+        result += c_fibonacci(300);
     }
 
     // Get the end time using QueryPerformanceCounter()
@@ -57,14 +59,24 @@ static PyObject* c_benchmark(PyObject* self, PyObject* args) {
     QueryPerformanceCounter(&end_time);
 
     // Calculate the time taken in microseconds
-    double time_taken = (end_time.QuadPart - start_time.QuadPart) * 1000000.0 / frequency.QuadPart;
+    double time_taken = (end_time.QuadPart - start_time.QuadPart) * 1000.0 / frequency.QuadPart;
     double dtt = time_taken;
 
     // Print the time it took (in microseconds)
-    printf("C function executed in %.6f microseconds;%d, %lld, %lld, %lld\n", time_taken,n,result,start_time.QuadPart,end_time.QuadPart);
+    printf("C function executed in %.6f milliseconds, %lld\n", time_taken,result);
 
     // Return the result as a Python long object
     return PyFloat_FromDouble(dtt);
+}
+
+static int c_fibonacci(int n) {
+    int a = 0, b = 1, temp;
+    for (int i = 0; i < n; i++) {
+        temp = a;
+        a = b;
+        b = temp + b;
+    }
+    return a;
 }
 
 // Method table for the module
