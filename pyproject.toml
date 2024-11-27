@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "pymodule"
 version = "0.1.0"
-description = "A sample project driven by poetry, using Cython"
+description = "A sample project driven by poetry, using C and Cython extensions"
 authors = ["Ivan Cenov <i_cenov@botevgrad.com>"]
 readme = "README.md"
 packages = [{include = "pymodule", from = "src"}]
+# Additional files that shuld be added to sdist and wheel distributions.
 include = [
     "pyproject.toml",
     "build.py",
@@ -15,6 +16,7 @@ include = [
     "src/pymodule/c_ext/cmoduleb/*"
 ]  # Compiled extensions
 
+# Runtime dependencies
 [tool.poetry.dependencies]
 python = ">=3.12"
 cython = ">=3.0"
@@ -26,21 +28,28 @@ paho-mqtt = "*"
 jsonschema = "*"
 rfc3986 = "*"
 
+# Development dependencies
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"  # Static type checker
 pathlib = ">=1.0"
 
+# Test dependencies
 [tool.poetry.group.test.dependencies]
 pytest = ">=8.0.0"
 pytest-cov = ">=6.0.0"
 pytest-mock = ">=3.0.0"
 
+# CLI entry points
 [tool.poetry.scripts]
 pymodule = "pymodule.cli.app:main"
 
+# Path definitions, specific for this project.
 [tool.build.config]
+# path where Cython extensions live, each extension in one .pix file
 cython_path = "src/pymodule/cyth"
+# path where C extensions live, each extension in its own subdirectory, that can contain multiple `.c` files and subdirectories.
 c_ext_path = "src/pymodule/c_ext"
+# directories wher C extensions can search for C header files
 include_dirs = ["src/pymodule/include", "src/include"]
 
 [build-system]
