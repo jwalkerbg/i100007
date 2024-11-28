@@ -16,6 +16,8 @@
       - [Installing Poetry.](#installing-poetry)
     - [Installing Poetry driven project.](#installing-poetry-driven-project)
     - [Building distributions.](#building-distributions)
+    - [Extensions.](#extensions)
+      - [Benchmark function.](#benchmark-function)
   - [Configuration system.](#configuration-system)
   - [Version information](#version-information)
     - [Versions](#versions)
@@ -307,6 +309,36 @@ This command will produce two files in `dist` directory like these
 -a----     27.11.2024 г.     17:21         218137 pymodule-0.1.0-cp313-cp313-win_amd64.whl
 -a----     27.11.2024 г.     17:20         163210 pymodule-0.1.0.tar.gz
 ```
+
+### Extensions.
+
+This project supports C and Cython extensions. They live in dedicated directories. Paths to these directories are given in `pyproject.toml` in `[tool.build.config]`.
+
+* cython_path - path to the directory where Cython extensions are. By now, each extension is in its own only file. Subdirectories for each extension are not supported. Hope this changes soon.
+* c_ext_path - path to the directory where C extensions live. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
+* include_dirs - paths where C header files for C extensions are stored (Not tested for Cython extensions, probably used).
+* library_dirs - paths where external libraries are stored (.dll or .so). Used by both kinds of extensions (not tested yet).
+* libraries - This specifies the name of the libraries to link against, without the lib prefix or file extension.
+
+See the directory structure of this skeleton project to take shape of extension directories and their content.
+
+After successful installing several files appear in the extension directories. For C extensions a .pyd file is stored in the main (root) directory of each extension. Par example, `cmodulea.cp313-win_amd64.pyd` can be seen next to `cmodulea.c`. For Cython extensions, next to each `.pyx` file (the Cython source) appear (example)
+
+* hello_world.cp313-win_amd64.pyd - executable as library
+* hello_world.c - generated .c file, that should not be edited.
+* hello_world.html - descriptive file that shows what what Cython line to what generated corresponds to.
+
+Extensions are imported as normal Python modules. The rules of using `__init__.py` are valid.
+
+#### Benchmark function.
+
+This project contains a benchmark functions to show how much faster is Cython vs Python and C vs Cython. Benchmark function is a function that sums first 300 fibonacci numbers N times.
+
+* Python variant is in `src/pymodule/core/benchmark.py` - `python_benchmark`
+* Cython variant is in `src/pymodule/cyth/worker.pyx` - `cython_benchmark`
+* C variant is in `src/pymodule/c_ext/cmodulea/cmodulea.c` - `c_benchmark`
+
+`src/pymodule/core/benchmark.benchmark()` is the root function that calls in a sequence above functions and prints results. Benchmarks show the speeds of calculation and demonstrate interactions between Python, Cython and C.
 
 ## Configuration system.
 
