@@ -1,60 +1,69 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "pymodule"
 version = "0.1.0"
-description = "Python module skeleton (please rename)"
-readme = { text = """This is a multi-line basic string.
-It allows for special characters such as \n for newlines and " for quotes.""", content-type = "text/plain" }
-requires-python = ">=3.6"
+description = "A sample project driven by poetry, using C and Cython extensions"
+authors = ["Ivan Cenov <i_cenov@botevgrad.com>"]
+readme = "README.md"
+packages = [{include = "pymodule", from = "src"}]
+# Additional files that shuld be added to sdist and wheel distributions.
+include = [
+    "pyproject.toml",
+    "build.py",
+    "MANIFEST.in",
+    "README.md",
+    "src/pymodule/cyth/*",
+    "src/pymodule/c_ext/cmodulea/*",
+    "src/pymodule/c_ext/cmoduleb/*"
+]  # Compiled extensions
 
-# Author information using a literal single-quoted email and basic double-quoted name
-authors = [
-    { name = "Ivan Cenov", email = "ivan.cenov@rnd.bg" }
-]
-maintainers = [
-    { name = "Ivan Cenov", email = "ivan.cenov@rnd.bg" }
-]
+# Runtime dependencies
+[tool.poetry.dependencies]
+python = ">=3.12"
+cython = ">=3.0"
+setuptools = ">=68.0.0"
+tomli = { version = "*", markers = "python_version < '3.11'" }
+numpy = "*"
+importlib = "*"
+paho-mqtt = "*"
+jsonschema = "*"
+rfc3986 = "*"
 
-# Dependencies
-dependencies = [
-    "numpy",
-    "importlib",
-    "paho-mqtt",
-    "jsonschema",
-    "rfc3986",
-    "tomli; python_version < '3.11'"
-]
+# Development dependencies
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.5.1"  # Static type checker
+pathlib = ">=1.0"
 
-# Optional dependencies section for development tools
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0.0"
-]
+# Test dependencies
+[tool.poetry.group.test.dependencies]
+pytest = ">=8.0.0"
+pytest-cov = ">=6.0.0"
+pytest-mock = ">=3.0.0"
 
-# Defining various URLs (these UTL are examples, please add other urls and/or remove redundant ones.
-[project.urls]
-homepage = "https://pymodule.example.com"  # Literal string for homepage URL
-repository = "http://github.com/username/pymodule.git"  # Basic string for repository URL
-documentation = "https://pymodule.readthedocs.io"
-bug_tracker = "https://github.com/username/pymodule/issues"
-changelog = "https://github.com/username/pymodule/releases"
-ci_pipeline = "https://github.com/username/pymodule/actions"
-funding = "https://github.com/sponsors/username"
-faq = "https://pymodule.example.com/faq"  # Custom URL key for FAQ
-
-# Example custom configuration for `setuptools`
-[tool.setuptools]
-package-dir = {'' = 'src'}  # Single-quoted key for directory name
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-# Entry point for the CLI script
-[project.scripts]
+# CLI entry points
+[tool.poetry.scripts]
 pymodule = "pymodule.cli.app:main"
+
+# Definitions, specific for this project.
+[tool.build.config]
+# path where Cython extensions live, each extension in one .pix file
+cython_path = "src/pymodule/cyth"
+# path where C extensions live, each extension in its own subdirectory, that can contain multiple `.c` files and subdirectories.
+c_ext_path = "src/pymodule/c_ext"
+# directories where C extensions can search for C header files
+include_dirs = ["src/pymodule/include", "src/include"]
+# This specifies the name of the libraries to link against, without the lib prefix or file extension.
+# Example: If you have a shared library named `libmylib.so` (Linux) or `mylib.dll` (Windows), you would specify libraries=["mylib"].
+libraries = []
+# activate logging in build.py
+build_log = true
+
+[build-system]
+requires = ["poetry-core", "setuptools", "Cython"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.build]
+generate-setup-file = true
+script = 'build.py'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

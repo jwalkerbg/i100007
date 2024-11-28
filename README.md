@@ -10,6 +10,14 @@
     - [Editable installation](#editable-installation)
     - [Editable installation plus unit tests](#editable-installation-plus-unit-tests)
     - [Building package](#building-package)
+  - [Poetry driven project](#poetry-driven-project)
+    - [Prerequisites.](#prerequisites)
+      - [Installing pipx.](#installing-pipx)
+      - [Installing Poetry.](#installing-poetry)
+    - [Installing Poetry driven project.](#installing-poetry-driven-project)
+    - [Building distributions.](#building-distributions)
+    - [Extensions.](#extensions)
+      - [Benchmark function.](#benchmark-function)
   - [Configuration system.](#configuration-system)
   - [Version information](#version-information)
     - [Versions](#versions)
@@ -38,6 +46,16 @@ src
     pymodule    # name of the module, will be used as a name of the directory where the module will be installed
         __init__.py
         # projects sources, distributed in modules
+        c_ext     # C extensions
+            cmodulea    # cmodulea C extension
+                __init__.py     # files of cmodulea
+                cmodulea.c
+                cmodulea.h
+                utils
+                    utils.c
+            cmoduleb    # cmoduleb C extension
+                __init__.py     # files of cmoduleb
+                cmoduleb.c
         cli
             # command line entry points
             app.py
@@ -47,10 +65,18 @@ src
             config.py
             core_module_a.py
             core_module_b.py
+        cyth      # Cython extensions
+            hello_world.pyx   # Cython sources
+            worker.pyx
+            hello_world.c     # generated C files
+            worker.c
+            hello_world.cp313-win_amd64.pyd   # generated executable (.dll or .so)
+            worker.cp313-win_amd64.pyd
         drivers
             # driver files, can be in subdirectories
             __init__.py
             ina236.py       # exaple driver module; can have separate diretories for drivers
+        include   # directory for headers, specific pymodule, used by C extensions (and Cython extensions?)
         logger
             # application logger
             __init__.py
@@ -94,6 +120,8 @@ Why Is the `src/` Directory Used?
 Depending on the project, one can organize exposition of packages' internals differently. In this template project, each directory under `src/` has `__init__.py` file which brings objects from python module files to a package level. This makes the usage of the packages easier - there is no need for an application programmer to know internal structure. See `src/cli/app.py` for how they are used.
 
 ## Virtual environment, installation, running
+
+Attention: This is valid for older project organization where [Poetry](https://python-poetry.org/) is not used.
 
 ### Virtual environment
 
@@ -188,6 +216,129 @@ At last, `pymodule-0.1.0-py3-none-any.whl` can be installed outside the virtual 
 `pip install pymodule-0.1.0-py3-none-any.whl`
 
 These packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milky Way Galaxy.
+
+## Poetry driven project
+
+Attention: This chapter is actual for [Poetry](https://python-poetry.org/) based projects. Tje work with Poetry is described.
+
+The project has examples of C and Cython extensions.
+
+### Prerequisites.
+
+Before working with Poetry driven projects, Poetry should be installed. As its documentations say, Poetry must be installed in its own environment. It should not depend on environments which projects being developed use. Also it not a good idea to install Poetry in the global Python environment. The installation is made easy by [pipx](https://pipx.pypa.io/stable/installation/).
+
+#### Installing pipx.
+
+Ubuntu Linux:
+```bash
+sudo apt update
+sudo apt install pipx
+pipx ensurepath
+```
+
+Other Linux
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+
+Windows:
+```bash
+python -m pip install --user pipx
+```
+
+or
+
+```bash
+scoop install pipx
+pipx ensurepath
+```
+
+The option `--user` directs installation for current user.
+
+#### Installing Poetry.
+
+```bash
+pipx install poetry
+```
+
+This installs Poetry dependencies and builds Cython and C extensions. After installing you should be able to start Poetry with
+
+```
+pypoetry
+```
+
+### Installing Poetry driven project.
+
+First take a look at `pyproject.toml`. It is construted to point to Poetry as a build tool. See comments for additional information.
+
+Installing project in editable mode. Run following command from the root of the project
+
+```bash
+poetry install
+```
+
+This command will create virtual environment of the project, will installits dependencies and will build extensions.
+
+Running project. This is done by
+
+```bash
+poerty run pymodule
+```
+
+or
+
+```bash
+poetry shell
+pymodule
+```
+
+The first variant will be deprecated soon. `poetry shell` opens new shell in current terminal with activated the project's virtual environment.
+
+### Building distributions.
+
+Building is executed under Poetry control:
+
+```bash
+poetry build
+```
+
+This command will produce two files in `dist` directory like these
+
+```bash
+-a----     27.11.2024 г.     17:21         218137 pymodule-0.1.0-cp313-cp313-win_amd64.whl
+-a----     27.11.2024 г.     17:20         163210 pymodule-0.1.0.tar.gz
+```
+
+### Extensions.
+
+This project supports C and Cython extensions. They live in dedicated directories. Paths to these directories are given in `pyproject.toml` in `[tool.build.config]`.
+
+* cython_path - path to the directory where Cython extensions are. By now, each extension is in its own only file. Subdirectories for each extension are not supported. Hope this changes soon.
+* c_ext_path - path to the directory where C extensions live. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
+* include_dirs - paths where C header files for C extensions are stored (Not tested for Cython extensions, probably used).
+* library_dirs - paths where external libraries are stored (.dll or .so). Used by both kinds of extensions (not tested yet).
+* libraries - This specifies the name of the libraries to link against, without the lib prefix or file extension.
+
+See the directory structure of this skeleton project to take shape of extension directories and their content.
+
+After successful installing several files appear in the extension directories. For C extensions a .pyd file is stored in the main (root) directory of each extension. Par example, `cmodulea.cp313-win_amd64.pyd` can be seen next to `cmodulea.c`. For Cython extensions, next to each `.pyx` file (the Cython source) appear (example)
+
+* hello_world.cp313-win_amd64.pyd - executable as library
+* hello_world.c - generated .c file, that should not be edited.
+* hello_world.html - descriptive file that shows what what Cython line to what generated corresponds to.
+
+Extensions are imported as normal Python modules. The rules of using `__init__.py` are valid.
+
+#### Benchmark function.
+
+This project contains a benchmark functions to show how much faster is Cython vs Python and C vs Cython. Benchmark function is a function that sums first 300 fibonacci numbers N times.
+
+* Python variant is in `src/pymodule/core/benchmark.py` - `python_benchmark`
+* Cython variant is in `src/pymodule/cyth/worker.pyx` - `cython_benchmark`
+* C variant is in `src/pymodule/c_ext/cmodulea/cmodulea.c` - `c_benchmark`
+
+`src/pymodule/core/benchmark.benchmark()` is the root function that calls in a sequence above functions and prints results. Benchmarks show the speeds of calculation and demonstrate interactions between Python, Cython and C.
 
 ## Configuration system.
 
