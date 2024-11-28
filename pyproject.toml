@@ -51,6 +51,9 @@ cython_path = "src/pymodule/cyth"
 c_ext_path = "src/pymodule/c_ext"
 # directories where C extensions can search for C header files
 include_dirs = ["src/pymodule/include", "src/include"]
+# This specifies the name of the libraries to link against, without the lib prefix or file extension.
+# Example: If you have a shared library named `libmylib.so` (Linux) or `mylib.dll` (Windows), you would specify libraries=["mylib"].
+libraries = []
 # activate logging in build.py
 build_log = true
 
