@@ -12,6 +12,8 @@ include = [
     "MANIFEST.in",
     "README.md",
     "src/pymodule/cyth/*",
+    "src/pymodule/cyth/hello_world/*",
+    "src/pymodule/cyth/worker/*",
     "src/pymodule/c_ext/cmodulea/*",
     "src/pymodule/c_ext/cmoduleb/*"
 ]  # Compiled extensions
