@@ -75,32 +75,19 @@ def build_cython_extensions():
     else:
         include_dirs = [str(Path(dir)) for dir in include_dirs]
 
-    # Dynamically find all .pyx files in the cyth directory
-    pyx_files = list(Path(cython_path).rglob("*.pyx"))
     ext_dirs = []
-    extensions = [
-        Extension(
-            pyx_file.stem,  # The module name (e.g., "hello_world" from "hello_world.pyx")
-            [str(pyx_file)],
-            include_dirs=include_dirs,
-            extra_compile_args=extra_compile_args,
-            language="c",
-        )
-        for pyx_file in pyx_files
-    ]
-    ext_dirs = [(pyx_file.parent) for pyx_file in pyx_files]
 
     # Dynamically find all .c files in the cyth directory
-    root_path = Path(c_ext_path)
-    c_extensions = []
+    root_path = Path(cython_path)
+    extensions = []
     for subdir in root_path.iterdir():
         c_files = []
         if subdir.is_dir():
-            # Recursively get all .c files for the current module
-            c_files = list(subdir.rglob("*.c"))
+            # Recursively get all .pyx files for the current module
+            c_files = list(subdir.rglob("*.pyx"))
         if c_files:
             ext_dirs.append(subdir)
-            c_extensions.append(
+            extensions.append(
                 Extension(
                     str(subdir.name),
                     [str(c_file) for c_file in c_files],
@@ -110,12 +97,26 @@ def build_cython_extensions():
                 )
             )
 
-    build_log and logger.info(f"c_extensions: {c_extensions}")
-
-    extensions.extend(c_extensions)
+    # Dynamically find all .c files in the cyth directory
+    root_path = Path(c_ext_path)
+    for subdir in root_path.iterdir():
+        c_files = []
+        if subdir.is_dir():
+            # Recursively get all .c files for the current module
+            c_files = list(subdir.rglob("*.c"))
+        if c_files:
+            ext_dirs.append(subdir)
+            extensions.append(
+                Extension(
+                    str(subdir.name),
+                    [str(c_file) for c_file in c_files],
+                    include_dirs=include_dirs,
+                    extra_compile_args=extra_compile_args,
+                    language="c"
+                )
+            )
 
     # Log discovered extensions
-    build_log and logger.info(f"Discovered .pyx files: {pyx_files}")
     build_log and logger.info(f"Creating Extensions: {[ext.name for ext in extensions]}")
     build_log and logger.info(f"collected extension directories: {ext_dirs}")
 
