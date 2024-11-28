@@ -43,14 +43,16 @@ pytest-mock = ">=3.0.0"
 [tool.poetry.scripts]
 pymodule = "pymodule.cli.app:main"
 
-# Path definitions, specific for this project.
+# Definitions, specific for this project.
 [tool.build.config]
 # path where Cython extensions live, each extension in one .pix file
 cython_path = "src/pymodule/cyth"
 # path where C extensions live, each extension in its own subdirectory, that can contain multiple `.c` files and subdirectories.
 c_ext_path = "src/pymodule/c_ext"
-# directories wher C extensions can search for C header files
+# directories where C extensions can search for C header files
 include_dirs = ["src/pymodule/include", "src/include"]
+# activate logging in build.py
+build_log = true
 
 [build-system]
 requires = ["poetry-core", "setuptools", "Cython"]
