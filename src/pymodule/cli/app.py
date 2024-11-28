@@ -4,10 +4,15 @@ from importlib.metadata import version
 
 import pymodule.core.core_module_a
 import pymodule.core.core_module_b
+import pymodule.core.benchmark
 import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
+from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea
+from pymodule.c_ext.cmoduleb.cmoduleb import print_hello_cmoduleb
+from pymodule.cyth.hello_world import hello
+from pymodule.cyth.worker import worker_func
 
 logger = getAppLogger(__name__)
 
@@ -72,8 +77,17 @@ def run_app(config:Config) -> None:
         pymodule.core.core_module_b.goodbye_from_core_module_b()
         pymodule.utils.hello_from_utils()
         pymodule.drivers.hello_from_ina236()
+        print_hello_cmodulea()
+        print_hello_cmoduleb()
+        print(f"{hello()}")
+        worker_func()
+
+        pymodule.core.benchmark.benchmark(500000)
     finally:
         logger.info("Exiting run_app")
+
+import time
+
 
 if __name__ == "__main__":
     main()
