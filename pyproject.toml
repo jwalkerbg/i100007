@@ -9,7 +9,6 @@ packages = [{include = "pymodule", from = "src"}]
 include = [
     "pyproject.toml",
     "build.py",
-    "MANIFEST.in",
     "README.md",
     "src/pymodule/cyth/*",
     "src/pymodule/cyth/hello_world/*",
