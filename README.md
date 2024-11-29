@@ -5,11 +5,6 @@
   - [Directory structure](#directory-structure)
     - [Why is used directory "src"? Is it possible to use real project root? What is the benefit to use "src"?](#why-is-used-directory-src-is-it-possible-to-use-real-project-root-what-is-the-benefit-to-use-src)
   - [Imports](#imports)
-  - [Virtual environment, installation, running](#virtual-environment-installation-running)
-    - [Virtual environment](#virtual-environment)
-    - [Editable installation](#editable-installation)
-    - [Editable installation plus unit tests](#editable-installation-plus-unit-tests)
-    - [Building package](#building-package)
   - [Poetry driven project](#poetry-driven-project)
     - [Prerequisites.](#prerequisites)
       - [Installing pipx.](#installing-pipx)
@@ -17,6 +12,7 @@
     - [Installing Poetry driven project.](#installing-poetry-driven-project)
     - [Building distributions.](#building-distributions)
     - [Extensions.](#extensions)
+      - [Add new extension](#add-new-extension)
       - [Benchmark function.](#benchmark-function)
   - [Configuration system.](#configuration-system)
   - [Version information](#version-information)
@@ -119,109 +115,7 @@ Why Is the `src/` Directory Used?
 
 Depending on the project, one can organize exposition of packages' internals differently. In this template project, each directory under `src/` has `__init__.py` file which brings objects from python module files to a package level. This makes the usage of the packages easier - there is no need for an application programmer to know internal structure. See `src/cli/app.py` for how they are used.
 
-## Virtual environment, installation, running
-
-Attention: This is valid for older project organization where [Poetry](https://python-poetry.org/) is not used.
-
-### Virtual environment
-
-On a console terminal execute
-
-`python -m venv venv`
-
-This creates a virtual environment in a subdirectory `venv` of the current directory (usually the root directory of the project's repository). It is not obligatory. Virtual environment can be created in a parent directory that contains several repositories and the projects in these repositiories can share common virtual envirnoment:
-
-`python -m venv ..\venv`
-
-or even
-
-`python -m venv ..\..\venv`
-
-Before use virtual enviromments must be activated:
-
-Windows:
-
-`./venv/Scripts/activate`
-
-or
-
-`./venv/Scripts/Activate.ps1`
-
-Linux:
-
-`source ./venv/bin/activate`
-
-Note that the path to `activate` in Linux is different that the path in Windows.
-
-Note that the execution of powershell scripts must be enabled on Windows platforms. To enable this globaly execute:
-
-1. Open powershell console as Administrator
-2. To view curent execution policy execute
-`Get-ExecutionPolicy`
-3. To enable execution of local scripts (not coming from the Internet) execute
-`Set-ExecutionPolicy RemoteSigned`
-or
-`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
-4. To revert to restricted policy execute `Set-ExecutionPolicy Restricted`
-
-### Editable installation
-
-To install the project in editable mode run
-
-`pip install -e .`
-
-This command installs the project in so called editable mode. It is usefull mode when several projects are developed in the same time, par example an application that uses another library project which is under development. Any changes in the library project will be visible instantly from the other project(s) in the same virtual environment.
-
-The procedure will install all needed external modules which are described in `dependencies` section of **pyproject.toml** file.
-
-### Editable installation plus unit tests
-
-`pytest` is used for unit testing. It must be installed in the virtual environment before use. This can be made by hand by
-
-`pip install pytest`
-
-or automaticaly by
-
-`pip install -e .[dev]`
-
-This command expects following code to exist in `pyproject.toml`:
-
-```toml
-# Optional dependencies section for development tools
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0.0"
-]
-```
-
-The command installs the current package in editable mode (`-e .`) along with any optional dependencies defined under `[project.optional-dependencies]` (in this case, `dev` dependencies).
-
-### Building package
-
-To produce distributable package execute following command
-
-`python -m build`
-
-This command will produce two files in **dist** folder. It will be created if does not exist.
-
-```
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a----      2.10.2024 г.     12:23           3045 pymodule-0.1.0-py3-none-any.whl
--a----      2.10.2024 г.     12:23           3832 pymodule-0.1.0.tar.gz
-```
-
-At last, `pymodule-0.1.0-py3-none-any.whl` can be installed outside the virtual environment, in other console even in other machine:
-
-`pip install pymodule-0.1.0-py3-none-any.whl`
-
-These packages can be also uploaded at [PyPI](https://pypi.org/) for distribution in the Milky Way Galaxy.
-
 ## Poetry driven project
-
-Attention: This chapter is actual for [Poetry](https://python-poetry.org/) based projects. Tje work with Poetry is described.
-
-The project has examples of C and Cython extensions.
 
 ### Prerequisites.
 
@@ -314,7 +208,7 @@ This command will produce two files in `dist` directory like these
 
 This project supports C and Cython extensions. They live in dedicated directories. Paths to these directories are given in `pyproject.toml` in `[tool.build.config]`.
 
-* cython_path - path to the directory where Cython extensions are. By now, each extension is in its own only file. Subdirectories for each extension are not supported. Hope this changes soon.
+* cython_path - path to the directory where Cython extensions are. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
 * c_ext_path - path to the directory where C extensions live. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
 * include_dirs - paths where C header files for C extensions are stored (Not tested for Cython extensions, probably used).
 * library_dirs - paths where external libraries are stored (.dll or .so). Used by both kinds of extensions (not tested yet).
@@ -322,13 +216,21 @@ This project supports C and Cython extensions. They live in dedicated directorie
 
 See the directory structure of this skeleton project to take shape of extension directories and their content.
 
-After successful installing several files appear in the extension directories. For C extensions a .pyd file is stored in the main (root) directory of each extension. Par example, `cmodulea.cp313-win_amd64.pyd` can be seen next to `cmodulea.c`. For Cython extensions, next to each `.pyx` file (the Cython source) appear (example)
+After successful installing several files appear in the extension directories. For C extensions a .pyd file is stored in the main (root) directory of each extension. Par example, `cmodulea.cp313-win_amd64.pyd` can be seen next to `cmodulea.c`. For Cython extensions, next to each `.pyx` file (the Cython source) appear (example):
 
 * hello_world.cp313-win_amd64.pyd - executable as library
 * hello_world.c - generated .c file, that should not be edited.
 * hello_world.html - descriptive file that shows what what Cython line to what generated corresponds to.
 
 Extensions are imported as normal Python modules. The rules of using `__init__.py` are valid.
+
+#### Add new extension
+
+To add new extension
+
+* create new directory for it in `cython_path` or `c_ext` path. Name it as the extension name.
+* create `__init__.py` in created directory.
+* add the directory in [tool.poetry][include] list.
 
 #### Benchmark function.
 
@@ -376,7 +278,7 @@ The version of the template is stored in `config.py` in `Config.DEFAULT_CONFIG't
 The version of the application is in `pyproject.toml` in `[project.version]`:
 
 ```toml
-[project]
+[tool.poetry]
 name = "name_of_ the _project"
 version = "major.minor.patch"
 ```
