@@ -9,10 +9,10 @@ import pymodule.utils.utilities
 import pymodule.drivers.ina236
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
-from pymodule.c_ext.cmodulea.cmodulea import print_hello_cmodulea
-from pymodule.c_ext.cmoduleb.cmoduleb import print_hello_cmoduleb
-from pymodule.cyth.hello_world import hello
-from pymodule.cyth.worker import worker_func
+from pymodule.extensions.cmodulea.cmodulea import print_hello_cmodulea
+from pymodule.extensions.cmoduleb.cmoduleb import print_hello_cmoduleb
+from pymodule.extensions.hello_world import hello
+from pymodule.extensions.worker import worker_func
 
 logger = getAppLogger(__name__)
 
