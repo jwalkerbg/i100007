@@ -9,6 +9,7 @@ typedef uint32_t DWORD;
 typedef int32_t LONG;
 typedef int64_t LONGLONG;
 
+#ifdef _WIN32
 typedef union _LARGE_INTEGER {
   struct {
     DWORD LowPart;
@@ -20,6 +21,7 @@ typedef union _LARGE_INTEGER {
   } u;
   LONGLONG QuadPart;
 } LARGE_INTEGER;
+#endif
 
 // Function to print a message
 static PyObject* print_hello_cmodulea(PyObject* self, PyObject* args) {
@@ -41,6 +43,7 @@ static PyObject* c_benchmark(PyObject* self, PyObject* args) {
         return NULL;
     }
 
+#ifdef _WIN32
     // Query the frequency of the performance counter
     LARGE_INTEGER frequency;
     QueryPerformanceFrequency(&frequency);  // Get the frequency of the performance counter
@@ -61,7 +64,23 @@ static PyObject* c_benchmark(PyObject* self, PyObject* args) {
     // Calculate the time taken in microseconds
     double time_taken = (end_time.QuadPart - start_time.QuadPart) * 1000.0 / frequency.QuadPart;
     double dtt = time_taken;
+#else
+    // Linux-specific timing
+    struct timespec start_time, end_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
 
+    // Perform the calculation
+    for (int i = 0; i < n; i++) {
+        result += c_fibonacci(300);
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+
+    // Calculate the time taken in milliseconds
+    double time_taken = (end_time.tv_sec - start_time.tv_sec) * 1000.0 +
+                        (end_time.tv_nsec - start_time.tv_nsec) / 1000000.0;
+    double dtt = time_taken;
+#endif
     // Print the time it took (in microseconds)
     printf("C function executed in %.6f milliseconds, %lld\n", time_taken,result);
 

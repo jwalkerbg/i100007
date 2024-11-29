@@ -1,1 +1,1 @@
-# pymodule/__init__.py
+# pymodule/cyth/__init__.py
