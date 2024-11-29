@@ -42,7 +42,7 @@ src
     pymodule    # name of the module, will be used as a name of the directory where the module will be installed
         __init__.py
         # projects sources, distributed in modules
-        c_ext     # C extensions
+        extensions      # C extensions
             cmodulea    # cmodulea C extension
                 __init__.py     # files of cmodulea
                 cmodulea.c
@@ -52,6 +52,10 @@ src
             cmoduleb    # cmoduleb C extension
                 __init__.py     # files of cmoduleb
                 cmoduleb.c
+            hello_world         # Cython extensions
+                hello_world.pyx
+            worker
+                worker.pyx
         cli
             # command line entry points
             app.py
@@ -61,13 +65,6 @@ src
             config.py
             core_module_a.py
             core_module_b.py
-        cyth      # Cython extensions
-            hello_world.pyx   # Cython sources
-            worker.pyx
-            hello_world.c     # generated C files
-            worker.c
-            hello_world.cp313-win_amd64.pyd   # generated executable (.dll or .so)
-            worker.cp313-win_amd64.pyd
         drivers
             # driver files, can be in subdirectories
             __init__.py
@@ -208,8 +205,7 @@ This command will produce two files in `dist` directory like these
 
 This project supports C and Cython extensions. They live in dedicated directories. Paths to these directories are given in `pyproject.toml` in `[tool.build.config]`.
 
-* cython_path - path to the directory where Cython extensions are. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
-* c_ext_path - path to the directory where C extensions live. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
+* extensions - path to the directory where C and Cython extensions are. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
 * include_dirs - paths where C header files for C extensions are stored (Not tested for Cython extensions, probably used).
 * library_dirs - paths where external libraries are stored (.dll or .so). Used by both kinds of extensions (not tested yet).
 * libraries - This specifies the name of the libraries to link against, without the lib prefix or file extension.
