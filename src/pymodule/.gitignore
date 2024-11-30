@@ -1,6 +1,2 @@
-cyth/*.c
-cyth/*.html
-cyth/*.pyd
-cyth/**/*.c
-cyth/**/*.html
-cyth/**/*.pyd
+extensions/**/*.html
+extensions/**/*.pyd
