@@ -37,8 +37,7 @@ def build_cython_extensions():
     Cython.Compiler.Options.annotate = True
 
     config = read_cython_path()
-    cython_path = config.get("cython_path", "cython")
-    c_ext_path = config.get("c_ext_path", "c_ext")
+    extensions_path = config.get("extensions_path","extensions")
     include_dirs = config.get("include_dirs", [])
     build_log = config.get("build_log", False)
 
@@ -53,7 +52,7 @@ def build_cython_extensions():
 
         logger.info(f"Logging build.py")
 
-    build_log and logger.info(f"Using Cython path: {cython_path}, c_ext path: {c_ext_path}")
+    build_log and logger.info(f"Using extensions path: {extensions_path}")
 
     if os.name == "nt":  # Windows
         extra_compile_args = [
@@ -78,32 +77,14 @@ def build_cython_extensions():
     ext_dirs = []
 
     # Dynamically find all .c files in the cyth directory
-    root_path = Path(cython_path)
+    root_path = Path(extensions_path)
     extensions = []
+    patterns = ["*.c", "*.pyx"]
     for subdir in root_path.iterdir():
         c_files = []
         if subdir.is_dir():
-            # Recursively get all .pyx files for the current module
-            c_files = list(subdir.rglob("*.pyx"))
-        if c_files:
-            ext_dirs.append(subdir)
-            extensions.append(
-                Extension(
-                    str(subdir.name),
-                    [str(c_file) for c_file in c_files],
-                    include_dirs=include_dirs,
-                    extra_compile_args=extra_compile_args,
-                    language="c"
-                )
-            )
-
-    # Dynamically find all .c files in the cyth directory
-    root_path = Path(c_ext_path)
-    for subdir in root_path.iterdir():
-        c_files = []
-        if subdir.is_dir():
-            # Recursively get all .c files for the current module
-            c_files = list(subdir.rglob("*.c"))
+            # Recursively get all .c and .pyx files for the current module
+            c_files = [file for pattern in patterns for file in subdir.rglob(pattern)]
         if c_files:
             ext_dirs.append(subdir)
             extensions.append(

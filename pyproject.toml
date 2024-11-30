@@ -10,11 +10,11 @@ include = [
     "pyproject.toml",
     "build.py",
     "README.md",
-    "src/pymodule/cyth/*",
-    "src/pymodule/cyth/hello_world/*",
-    "src/pymodule/cyth/worker/*",
-    "src/pymodule/c_ext/cmodulea/*",
-    "src/pymodule/c_ext/cmoduleb/*"
+    "src/pymodule/extensions/*",
+    "src/pymodule/extensions/hello_world/*",
+    "src/pymodule/extensions/worker/*",
+    "src/pymodule/extensions/cmodulea/*",
+    "src/pymodule/extensions/cmoduleb/*"
 ]  # Compiled extensions
 
 # Runtime dependencies
@@ -46,10 +46,8 @@ pymodule = "pymodule.cli.app:main"
 
 # Definitions, specific for this project.
 [tool.build.config]
-# path where Cython extensions live, each extension in one .pix file
-cython_path = "src/pymodule/cyth"
-# path where C extensions live, each extension in its own subdirectory, that can contain multiple `.c` files and subdirectories.
-c_ext_path = "src/pymodule/c_ext"
+# path where Cython and C extensions live, each extension in a separate directory
+extensions_path = "src/pymodule/extensions"
 # directories where C extensions can search for C header files
 include_dirs = ["src/pymodule/include", "src/include"]
 # This specifies the name of the libraries to link against, without the lib prefix or file extension.

@@ -2,8 +2,8 @@
 
 import time
 from pymodule.logger import getAppLogger
-from pymodule.c_ext.cmodulea.cmodulea import c_benchmark
-from pymodule.cyth.worker import cython_benchmark
+from pymodule.extensions.cmodulea.cmodulea import c_benchmark
+from pymodule.extensions.worker import cython_benchmark
 
 logger = getAppLogger(__name__)
 

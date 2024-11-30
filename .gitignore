@@ -13,3 +13,4 @@ __pycache__/
 # Distribution / packaging
 /build
 /dist
+build.log
