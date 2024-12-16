@@ -14,7 +14,8 @@
         "language": "c",
         "name": "hello_world",
         "sources": [
-            "src\\pymodule\\extensions\\hello_world\\hello_world.pyx"
+            "src\\pymodule\\extensions\\hello_world\\hello_world.pyx",
+            "src\\pymodule\\extensions\\hello_world\\hello_world.c"
         ]
     },
     "module_name": "hello_world"

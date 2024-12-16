@@ -14,7 +14,8 @@
         "language": "c",
         "name": "worker",
         "sources": [
-            "src\\pymodule\\extensions\\worker\\worker.pyx"
+            "src\\pymodule\\extensions\\worker\\worker.pyx",
+            "src\\pymodule\\extensions\\worker\\worker.c"
         ]
     },
     "module_name": "worker"
