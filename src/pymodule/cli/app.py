@@ -32,7 +32,7 @@ def parse_args():
     verbosity_group.add_argument('--verbose', dest='verbose', action='store_const', const=True, help='Enable verbose mode')
     verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const', const=False, help='Disable verbose mode')
 
-    # aplication options & parameters
+    # application options & parameters
     parser.add_argument('--param1', type=int, help="Parameter1")
     parser.add_argument('--param2', type=int, help="Parameter2")
 
@@ -52,7 +52,7 @@ def main():
     try:
         cfg.load_config_file(config_file)
     except Exception as e:
-        logger.info(f"Error with loading configuration file. Giving up.")
+        logger.info(f"Error with loading configuration file. Giving up.\n{e}")
         return
 
     # Step 4: Merge default config, config.json, and command-line arguments
@@ -85,8 +85,6 @@ def run_app(config:Config) -> None:
         pymodule.core.benchmark.benchmark(500000)
     finally:
         logger.info("Exiting run_app")
-
-import time
 
 
 if __name__ == "__main__":

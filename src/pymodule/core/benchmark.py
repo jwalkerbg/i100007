@@ -15,7 +15,7 @@ def benchmark(n:int) -> None:
 
     print(f"Python = 100.0%")
     print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
-    print(f"C      = {(((cdiff) / pdiff)*100.0)}%")
+    print(f"C      = {((cdiff / pdiff)*100.0)}%")
 
 def python_benchmark(n):
     start_time = time.time()
