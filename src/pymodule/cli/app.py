@@ -2,11 +2,7 @@
 import argparse
 from importlib.metadata import version
 
-import pymodule.core.core_module_a
-import pymodule.core.core_module_b
-import pymodule.core.benchmark
-import pymodule.utils.utilities
-import pymodule.drivers.ina236
+import pymodule
 from pymodule.core.config import Config
 from pymodule.logger import getAppLogger
 from pymodule.extensions.cmodulea.cmodulea import print_hello_cmodulea
@@ -71,12 +67,12 @@ def run_app(config:Config) -> None:
         # Add real application code here.
         logger.info(f"Running run_app")
         logger.info(f"config = {config.config}")
-        pymodule.core.core_module_a.hello_from_core_module_a()
-        pymodule.core.core_module_a.goodbye_from_core_module_a()
-        pymodule.core.core_module_b.hello_from_core_module_b()
-        pymodule.core.core_module_b.goodbye_from_core_module_b()
-        pymodule.utils.hello_from_utils()
-        pymodule.drivers.hello_from_ina236()
+        pymodule.hello_from_core_module_a()
+        pymodule.goodbye_from_core_module_a()
+        pymodule.hello_from_core_module_b()
+        pymodule.goodbye_from_core_module_b()
+        pymodule.hello_from_utils()
+        pymodule.hello_from_ina236()
         print_hello_cmodulea()
         print_hello_cmoduleb()
         print(f"{hello()}")
