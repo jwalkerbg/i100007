@@ -156,6 +156,7 @@ class Config:
             if config_cli.verbose is not None:
                 self.config['logging']['verbose'] = config_cli.verbose
 
+            # sample parameters that should be changed in real applications
             if config_cli.param1 is not None:
                 self.config['parameters']['param1'] = config_cli.param1
             if config_cli.param2 is not None:
