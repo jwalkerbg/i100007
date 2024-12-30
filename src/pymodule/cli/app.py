@@ -52,7 +52,7 @@ def main():
         return
 
     # Step 4: Merge default config, config.json, and command-line arguments
-    cfg.merge_options(cfg.config, args)
+    cfg.merge_options(args)
 
     # Step 5: Show version info or run the application with collected configuration
     if cfg.config['metadata']['version']:

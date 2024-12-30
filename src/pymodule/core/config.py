@@ -145,7 +145,7 @@ class Config:
                 # Otherwise, update the key with the new value from config_file
                 config[key] = value
 
-    def merge_options(self, config_file:Dict, config_cli:argparse.Namespace=None) -> Dict:
+    def merge_options(self, config_cli:argparse.Namespace=None) -> Dict:
         # handle CLI options if started from CLI interface
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
