@@ -132,7 +132,7 @@ class TestConfig:
             'metadata': { 'version': False },
         }
         config_instance.config = config_file  # Simulate loaded config
-        merged_config = config_instance.merge_options(config_file, cli_args)
+        merged_config = config_instance.merge_options(cli_args)
 
         expected_config = {
             'parameters': {'param1': 10, 'param2': 20 },  # CLI args should override
@@ -152,7 +152,7 @@ class TestConfig:
             'metadata': {'version': False}
         }
         config_instance.config = config_file  # Simulate loaded config
-        merged_config = config_instance.merge_options(config_file, cli_args)
+        merged_config = config_instance.merge_options(cli_args)
 
         expected_config = {
             'parameters': {'param1': 1, 'param2': 2},
