@@ -20,8 +20,10 @@ def read_cython_path():
         with open("pyproject.toml", "rb") as f:
             pyproject_data = toml.load(f)
     except toml.TOMLDecodeError as e:
+        print(f"Exception while decoding pyproject.toml: {e}")
         return {}
     except Exception as e:
+        print(f"general exception while reading pyproject.toml: {e}")
         return {}
 
     return pyproject_data.get("tool", {}).get("build", {}).get("config", {})
