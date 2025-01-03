@@ -4,13 +4,13 @@ from importlib.metadata import version
 
 import pymodule
 from pymodule.core.config import Config
-from pymodule.logger import getAppLogger
+from pymodule.logger import get_app_logger
 from pymodule.extensions.cmodulea.cmodulea import print_hello_cmodulea
 from pymodule.extensions.cmoduleb.cmoduleb import print_hello_cmoduleb
 from pymodule.extensions.hello_world import hello
 from pymodule.extensions.worker import worker_func
 
-logger = getAppLogger(__name__)
+logger = get_app_logger(__name__)
 
 def parse_args():
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""

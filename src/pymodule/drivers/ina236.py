@@ -1,8 +1,8 @@
 # drivers/ina236.py
 
-from pymodule.logger import getAppLogger
+from pymodule.logger import get_app_logger
 
-logger = getAppLogger(__name__)
+logger = get_app_logger(__name__)
 
 def hello_from_ina236() -> None:
     logger.info(f"Hello from ina236")

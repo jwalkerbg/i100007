@@ -7,9 +7,9 @@ import json
 from jsonschema import validate, ValidationError
 import importlib.resources as resources
 
-from pymodule.logger import getAppLogger
+from pymodule.logger import get_app_logger
 
-logger = getAppLogger(__name__)
+logger = get_app_logger(__name__)
 
 # Check Python version at runtime
 if sys.version_info >= (3, 11):

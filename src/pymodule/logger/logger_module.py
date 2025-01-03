@@ -37,7 +37,7 @@ console_handler.setFormatter(custom_formatter)
 string_handler = StringHandler()
 string_handler.setFormatter(custom_formatter)
 
-def getAppLogger(area_tag:str, toString:bool=False) -> logging.Logger:
+def get_app_logger(area_tag:str, toString:bool=False) -> logging.Logger:
     if not area_tag or len(area_tag) == 0:
         return None
     lg = logging.getLogger(area_tag)
