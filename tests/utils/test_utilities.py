@@ -19,7 +19,7 @@ class TestUtils(unittest.TestCase):
         assert utils.sumator(1,2,3) == 6
 
 # unittest style, less informative on errors
-class TestSumator_u(unittest.TestCase):
+class TestsumatorU(unittest.TestCase):
     def test_sumator_up(self):
         test_cases = [
             (1, 2, 3, 6),       # 1 + 2 + 3 = 6
@@ -34,7 +34,7 @@ class TestSumator_u(unittest.TestCase):
                 self.assertEqual(utils.sumator(a, b, c), expected)
 
 # pytest style, more informative on errors
-class TestSumator_pp:
+class TestsumatorPp:
     @pytest.mark.parametrize(
         "a, b, c, expected", [
             (1, 2, 3, 6),       # 1 + 2 + 3 = 6

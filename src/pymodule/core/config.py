@@ -3,9 +3,7 @@
 import sys
 from typing import Dict, Any
 import argparse
-import json
 from jsonschema import validate, ValidationError
-import importlib.resources as resources
 
 from pymodule.logger import get_app_logger
 
