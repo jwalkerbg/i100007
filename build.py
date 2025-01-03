@@ -52,7 +52,8 @@ def build_cython_extensions():
 
         logger.info(f"Logging build.py")
 
-    build_log and logger.info(f"Using extensions path: {extensions_path}")
+    if build_log:
+        logger.info(f"Using extensions path: {extensions_path}")
 
     if os.name == "nt":  # Windows
         extra_compile_args = [
@@ -98,17 +99,20 @@ def build_cython_extensions():
             )
 
     # Log discovered extensions
-    build_log and logger.info(f"Creating Extensions: {[ext.name for ext in extensions]}")
-    build_log and logger.info(f"collected extension directories: {ext_dirs}")
+    if build_log:
+        logger.info(f"Creating Extensions: {[ext.name for ext in extensions]}")
+        logger.info(f"collected extension directories: {ext_dirs}")
 
     include_dirs = set()
     for extension in extensions:
         include_dirs.update(extension.include_dirs)
     include_dirs = list(include_dirs)
 
-    build_log and logger.info("Cythonizing.....")
+    if build_log:
+        logger.info("Cythonizing.....")
     ext_modules = cythonize(extensions, include_path=include_dirs, language_level=3, annotate=True)
-    build_log and logger.info("End of Cythonizing")
+    if build_log:
+        logger.info("End of Cythonizing")
     dist = Distribution({"ext_modules": ext_modules})
     cmd = build_ext(dist)
     cmd.ensure_finalized()
@@ -118,7 +122,8 @@ def build_cython_extensions():
         output = Path(output)
         src_relative_path = src_path / output.name
         shutil.copyfile(output, src_relative_path)
-        build_log and logger.info(f"Copied {output} to {src_relative_path}")
+        if build_log:
+            logger.info(f"Copied {output} to {src_relative_path}")
 
 def build(setup_kwargs):
     try:
