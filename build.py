@@ -70,9 +70,9 @@ def build_cython_extensions():
     extra_compile_args.append("-UNDEBUG")  # Cython disables asserts by default.
     # Relative to project root director
     if isinstance(include_dirs, str):
-        include_dirs = [dir.strip() for dir in include_dirs.split(",")]
+        include_dirs = [directory.strip() for directory in include_dirs.split(",")]
     else:
-        include_dirs = [str(Path(dir)) for dir in include_dirs]
+        include_dirs = [str(Path(directory)) for directory in include_dirs]
 
     ext_dirs = []
 
