@@ -40,7 +40,7 @@ string_handler.setFormatter(custom_formatter)
 
 def get_app_logger(area_tag:str, to_string:bool=False) -> logging.Logger:
     if not area_tag or len(area_tag) == 0:
-        return None
+        area_tag = ""
     lg = logging.getLogger(area_tag)
     lg.setLevel(logging.INFO)
     lg.addHandler(console_handler)
