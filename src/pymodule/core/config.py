@@ -3,19 +3,17 @@
 import sys
 from typing import Dict, Any
 import argparse
-import json
 from jsonschema import validate, ValidationError
-import importlib.resources as resources
 
-from pymodule.logger import getAppLogger
+from pymodule.logger import get_app_logger
 
-logger = getAppLogger(__name__)
+logger = get_app_logger(__name__)
 
 # Check Python version at runtime
 if sys.version_info >= (3, 11):
-    import tomllib  # Use the built-in tomllib for Python 3.11+
+    import tomllib as toml # Use the built-in tomllib for Python 3.11+
 else:
-    import tomli  # Use the external tomli for Python 3.7 to 3.10
+    import tomli as toml # Use the external tomli for Python 3.7 to 3.10
 
 class Config:
     def __init__(self) -> None:
@@ -24,7 +22,7 @@ class Config:
     DEFAULT_CONFIG = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.0.1",
+            'template_version': "3.0.2",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
@@ -39,7 +37,7 @@ class Config:
         }
     }
 
-    # When adding / removing changing configuration parameters, change following validation approrpiately
+    # When adding / removing changing configuration parameters, change following validation appropriately
     CONFIG_SCHEMA = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -90,15 +88,12 @@ class Config:
         try:
             # Open the file in binary mode (required by both tomli and tomllib)
             with open(file_path, 'rb') as f:
-                if sys.version_info >= (3, 11):
-                    return tomllib.load(f)  # Use tomllib for Python 3.11+
-                else:
-                    return tomli.load(f)  # Use tomli for Python 3.7 - 3.10
+                return toml.load(f)
 
         except FileNotFoundError as e:
             logger.error(f"{e}")
             raise e  # Optionally re-raise the exception if you want to propagate it
-        except (tomli.TOMLDecodeError if sys.version_info < (3, 11) else tomllib.TOMLDecodeError) as e:
+        except toml.TOMLDecodeError as e:
             logger.error(f"Error: Failed to parse TOML file '{file_path}'. Invalid TOML syntax.")
             raise e  # Re-raise the exception for further handling
         except Exception as e:
@@ -148,7 +143,7 @@ class Config:
                 # Otherwise, update the key with the new value from config_file
                 config[key] = value
 
-    def merge_options(self, config_file:Dict, config_cli:argparse.Namespace=None) -> Dict:
+    def merge_options(self, config_cli:argparse.Namespace=None) -> Dict:
         # handle CLI options if started from CLI interface
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
@@ -159,6 +154,7 @@ class Config:
             if config_cli.verbose is not None:
                 self.config['logging']['verbose'] = config_cli.verbose
 
+            # sample parameters that should be changed in real applications
             if config_cli.param1 is not None:
                 self.config['parameters']['param1'] = config_cli.param1
             if config_cli.param2 is not None:

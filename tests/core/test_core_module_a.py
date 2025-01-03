@@ -3,7 +3,7 @@
 import unittest
 from pymodule import core
 
-class TestCore_a(unittest.TestCase):
+class TestcoreA(unittest.TestCase):
     def test_hello_from_core_module_a(self):
         self.assertEqual(core.hello_from_core_module_a(),1)
 

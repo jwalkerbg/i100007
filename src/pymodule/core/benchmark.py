@@ -1,11 +1,11 @@
 # core/benchmark.py
 
 import time
-from pymodule.logger import getAppLogger
+from pymodule.logger import get_app_logger
 from pymodule.extensions.cmodulea.cmodulea import c_benchmark
 from pymodule.extensions.worker import cython_benchmark
 
-logger = getAppLogger(__name__)
+logger = get_app_logger(__name__)
 
 def benchmark(n:int) -> None:
     logger.info(f"Benchmarks:")
@@ -15,7 +15,7 @@ def benchmark(n:int) -> None:
 
     print(f"Python = 100.0%")
     print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
-    print(f"C      = {(((cdiff) / pdiff)*100.0)}%")
+    print(f"C      = {((cdiff / pdiff)*100.0)}%")
 
 def python_benchmark(n):
     start_time = time.time()

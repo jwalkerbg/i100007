@@ -76,7 +76,7 @@ class TestConfig:
         """
         with patch('pymodule.core.config.logger') as mock_logger:
             with patch.object(core.Config, 'load_toml', return_value={"logging": {"verbose": False}}) as mock_load_toml:
-                config_instance.load_config_file(None)
+                config_instance.load_config_file()
                 mock_logger.error.assert_called_once_with("CFG: Using default 'None'")
                 mock_load_toml.assert_called_once_with(file_path="config.toml")
 
@@ -132,7 +132,7 @@ class TestConfig:
             'metadata': { 'version': False },
         }
         config_instance.config = config_file  # Simulate loaded config
-        merged_config = config_instance.merge_options(config_file, cli_args)
+        merged_config = config_instance.merge_options(cli_args)
 
         expected_config = {
             'parameters': {'param1': 10, 'param2': 20 },  # CLI args should override
@@ -152,7 +152,7 @@ class TestConfig:
             'metadata': {'version': False}
         }
         config_instance.config = config_file  # Simulate loaded config
-        merged_config = config_instance.merge_options(config_file, cli_args)
+        merged_config = config_instance.merge_options(cli_args)
 
         expected_config = {
             'parameters': {'param1': 1, 'param2': 2},

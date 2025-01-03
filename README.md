@@ -99,14 +99,14 @@ Why Is the `src/` Directory Used?
 
  By placing the code within a src/ directory, Python is forced to look for installed packages rather than directly accessing the project files unless explicitly instructed. This ensures that the code is properly installed and tested in an environment that more closely resembles production.
 
-2. Mitigation of Namespace Clashes: If common names are chosen for the project or modules, such as test.py or setup.py, conflicts may occur if everything is located in the root directory. For instance:
+1. Mitigation of Namespace Clashes: If common names are chosen for the project or modules, such as test.py or setup.py, conflicts may occur if everything is located in the root directory. For instance:
 
   * The presence of both a `tests/` directory and a `tests.py` file in the root directory could lead to confusion for both Python and external tools.
   * Project-related scripts (like `setup.py` or `manage.py`) could be accidentally imported instead of the actual source code modules.
 
   The `src/` directory helps to isolate the actual code from the rest of the project structure (such as tests, documentation, or build files), thereby reducing the risk of name collisions.
 
-  3. `Improved Clarity`: A project structure that includes a dedicated `src/` directory makes the location of the actual source code more apparent. This is particularly helpful in larger projects where other directories, such as `docs/`, `tests/`, or `ci/`, may exist at the root level. The source code is better organized when separated by the `src/` directory.
+  1. `Improved Clarity`: A project structure that includes a dedicated `src/` directory makes the location of the actual source code more apparent. This is particularly helpful in larger projects where other directories, such as `docs/`, `tests/`, or `ci/`, may exist at the root level. The source code is better organized when separated by the `src/` directory.
 
 ## Imports
 
@@ -116,7 +116,7 @@ Depending on the project, one can organize exposition of packages' internals dif
 
 ### Prerequisites.
 
-Before working with Poetry driven projects, Poetry should be installed. As its documentations say, Poetry must be installed in its own environment. It should not depend on environments which projects being developed use. Also it not a good idea to install Poetry in the global Python environment. The installation is made easy by [pipx](https://pipx.pypa.io/stable/installation/).
+Before working with Poetry driven projects, Poetry should be installed. As its documentations say, Poetry must be installed in its own environment. It should not depend on environments which projects being developed use. Also, it not a good idea to install Poetry in the global Python environment. The installation is made easy by [pipx](https://pipx.pypa.io/stable/installation/).
 
 #### Installing pipx.
 
@@ -153,7 +153,7 @@ The option `--user` directs installation for current user.
 pipx install poetry
 ```
 
-This installs Poetry dependencies and builds Cython and C extensions. After installing you should be able to start Poetry with
+This installs Poetry dependencies and builds Cython and C extensions. After installing, you should be able to start Poetry with
 
 ```
 pypoetry
@@ -161,7 +161,7 @@ pypoetry
 
 ### Installing Poetry driven project.
 
-First take a look at `pyproject.toml`. It is construted to point to Poetry as a build tool. See comments for additional information.
+First take a look at `pyproject.toml`. It is constructed to point to Poetry as a build tool. See comments for additional information.
 
 Installing project in editable mode. Run following command from the root of the project
 
@@ -169,7 +169,7 @@ Installing project in editable mode. Run following command from the root of the 
 poetry install
 ```
 
-This command will create virtual environment of the project, will installits dependencies and will build extensions.
+This command will create virtual environment of the project, will install its dependencies and will build extensions.
 
 Running project. This is done by
 
@@ -205,14 +205,14 @@ This command will produce two files in `dist` directory like these
 
 This project supports C and Cython extensions. They live in dedicated directories. Paths to these directories are given in `pyproject.toml` in `[tool.build.config]`.
 
-* extensions - path to the directory where C and Cython extensions are. Each extension has its own sub-directory with allowed directory tree beneath it. Names of directories become extensions names.
+* extensions - path to the directory where C and Cython extensions are. Each extension has its own subdirectory with allowed directory tree beneath it. Names of directories become extensions names.
 * include_dirs - paths where C header files for C extensions are stored (Not tested for Cython extensions, probably used).
 * library_dirs - paths where external libraries are stored (.dll or .so). Used by both kinds of extensions (not tested yet).
 * libraries - This specifies the name of the libraries to link against, without the lib prefix or file extension.
 
 See the directory structure of this skeleton project to take shape of extension directories and their content.
 
-Each extension can contain Cython files (.pyx), C files and native Python files. Cython files are compiled to C files (do not edit them). Then all C files in the directory are compiled. The fional result is a .pyd which in Windows is a DLL library. In Linux systems, .so file is generated. For Cython files descriptive .html files are genreated. the are some kind fo listings, where generated C code is shown below correspondent Cython code. Native Python files are not touched and can be used as usually.
+Each extension can contain Cython files (.pyx), C files and native Python files. Cython files are compiled to C files (do not edit them). Then all C files in the directory are compiled. The final result is a .pyd which in Windows is a DLL library. In Linux systems, .so file is generated. For Cython files descriptive .html files are generated. They are some kind of listings, where generated C code is shown below correspondent Cython code. Native Python files are not touched and can be used as usually.
 
 Extensions are imported as normal Python modules. The rules of using `__init__.py` are valid.
 
@@ -222,7 +222,7 @@ To add new extension
 
 * create new directory for it in `cython_path` or `c_ext` path. Name it as the extension name.
 * create `__init__.py` in created directory.
-* add the directory in [tool.poetry][include] list.
+* add the directory in [tool.poetry] `include` list.
 
 #### Benchmark function.
 
@@ -236,7 +236,7 @@ This project contains a benchmark functions to show how much faster is Cython vs
 
 ## Configuration system.
 
-The coniguration system of the module is implemented in `core/config.py` and `cli/app.py`. It is organized at three levels:
+The configuration system of the module is implemented in `core/config.py` and `cli/app.py`. It is organized at three levels:
 
 * default settings, hard-coded in the source of the module
 * configuration file, by default `config.toml` in current directory
@@ -248,13 +248,13 @@ Default configuration is in `pymodule.core.config.py`. Configuration file is in 
 
 Application configuration is implemented in `pymodule.core.config` in `class Config`.
 
-The default configuration comes with information about `pymodule` template meta data: template name, version and description. This information can be used by application to know what template it lay on. This information should not be altered. Hoever, new configuration options can be added as needed. The configuration is presented as a `Dict` object `Config.DEFAULT_CONFIG`.
+The default configuration comes with information about `pymodule` template metadata: template name, version and description. This information can be used by application to know what template it lay on. This information should not be altered. However, new configuration options can be added as needed. The configuration is presented as a `Dict` object `Config.DEFAULT_CONFIG`.
 
 Logging configuration is in `logging`. It can be changed with other values in the configuration file or with CLI option. By now, one option is available - `--verbose`.
 
 Application options consist of two example options - `param` and `param2` from type `int`. They are here to demonstrate the implementation. These options are in configuration options and at CLI.
 
-For consistency, each option on command line should have a configuration option in the default confiuration and/or the conifuration file.
+For consistency, each option on command line should have a configuration option in the default configuration and/or the configuration file.
 
 ## Version information
 
@@ -275,7 +275,7 @@ name = "name_of_ the _project"
 version = "major.minor.patch"
 ```
 
-Usually, an appliction programmer should not change template version (and name). It may do this only when upgrades the template the appliation project lays on.
+Usually, an application programmer should not change template version (and name). It may do this only when upgrades the template the application project lies on.
 
 However, changing application version is up to the team that develop the project, following project's versioning policy.
 
@@ -336,7 +336,7 @@ for msg in messages:
 
 ### Configuration
 
-Units tests are executed by `pytest` module which have to be installed in the virtual enviroment of the project. How this is done is given in above sections.
+Units tests are executed by `pytest` module which have to be installed in the virtual environment of the project. How this is done is given in above sections.
 
 `pytest` automatically finds the tests. To know where to search, following must be given in `pyproject.toml`:
 
@@ -375,7 +375,7 @@ class TestCore_a(unittest.TestCase):
         self.assertEqual(core_module_a.hello_from_core_module_a(),1)
 ```
 
-It is allowed test files to be organized in subdirectories of `tests/` directory which is convenient for bigger projects. The directory structure under `tests/` can mirrors that of `src/`, which can help keep tests organized and easy to navigate as the project grows.
+It is allowed test files to be organized in subdirectories of `tests/` directory which is convenient for bigger projects. The directory structure under `tests/` can mirror that of `src/`, which can help keep tests organized and easy to navigate as the project grows.
 
 ### `__init__.py` in Test Subdirectories (Optional)
 
@@ -406,7 +406,7 @@ To run unit tests with test coverage execute following command from the root of 
 
 `pytest --cov=.`
 
-Since MS Visual Studio Code 1.94 it is possible to run tests + coverage from left palette, from testing pane. You can run tests, debug tests and run tests with test coverage. Additional value from such running is that Test coverage pane is updated with percents of coverage of each python module + small graphics showing module state. Test explorer show all tests and makes easy to select which tests to execute. Project explorer alse have marks about percents for test coverage.
+Since MS Visual Studio Code 1.94 it is possible to run tests + coverage from left palette, from testing pane. You can run tests, debug tests and run tests with test coverage. Additional value from such running is that Test coverage pane is updated with percents of coverage of each python module + small graphics showing module state. Test explorer show all tests and makes easy to select which tests to execute. Project explorer also have marks about percents for test coverage.
 
 The project must be installed par example with `pip install -e .` to work with tests.
 
@@ -415,11 +415,11 @@ The project must be installed par example with `pip install -e .` to work with t
 1. Rename `src/pymodule` to `src/my_application_module_name` by
 
     `git mv pymodule application_module_name`
-1. Edit `pyproject.py`. Change `pymodule` to the real application name.
-1. Edit other parts of `pyproject.py` as needed for the application.
-1. Edit imports in `.py` files to use new `application_module_name`.
-1. Everywhere change `pymodule` to the `application_module_name`.
-1. Do not change following sections:
+2. Edit `pyproject.py`. Change `pymodule` to the real application name.
+3. Edit other parts of `pyproject.py` as needed for the application.
+4. Edit imports in `.py` files to use new `application_module_name`.
+5. Everywhere change `pymodule` to the `application_module_name`.
+6. Do not change following sections:
 
     * `[build-system]`
     * `[tool.setuptools]`
