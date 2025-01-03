@@ -9,7 +9,7 @@ TAGNAME = "pymodule"
 
 # Custom Formatter
 class CustomFormatter(logging.Formatter):
-    def format(self, record):
+    def format(self, record) -> str:
         log_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_message = f"{log_time} - {record.name} - {record.levelname} - {record.getMessage()}"
         return log_message
@@ -20,14 +20,14 @@ class StringHandler(logging.Handler):
         super().__init__()
         self.log_messages = []
 
-    def emit(self, record):
+    def emit(self, record) -> None:
         log_entry = self.format(record)
         self.log_messages.append(log_entry)
 
-    def get_logs(self):
+    def get_logs(self) -> str:
         return '\n'.join(self.log_messages)
 
-    def clear_logs(self):
+    def clear_logs(self) -> None:
         self.log_messages = []
 
 # Create the custom formatter and string handler
@@ -58,7 +58,7 @@ def disable_string_handler() -> None:
 def enable_string_handler() -> None:
     string_handler.filters.clear()
 
-def get_string_logs() -> List[str]:
+def get_string_logs() -> str:
     return string_handler.get_logs()
 
 def clear_string_logs() -> None:
