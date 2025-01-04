@@ -17,16 +17,21 @@ def parse_args():
     parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides')
 
     # configuration file name
-    parser.add_argument('--config', type=str, dest='config', default='config.toml',help="Name of the configuration file, default is 'config.toml'")
-    parser.add_argument('--no-config', action='store_const', const='', dest='config', help="Do not use a configuration file (only defaults & options)")
+    parser.add_argument('--config', type=str, dest='config', default='config.toml',\
+                        help="Name of the configuration file, default is 'config.toml'")
+    parser.add_argument('--no-config', action='store_const', const='', dest='config',\
+                        help="Do not use a configuration file (only defaults & options)")
 
     # version
-    parser.add_argument('-v', dest='app_version', action='store_true', help='Show version information of the module')
+    parser.add_argument('-v', dest='app_version', action='store_true',\
+                        help='Show version information of the module')
 
     # Verbosity option
     verbosity_group = parser.add_mutually_exclusive_group()
-    verbosity_group.add_argument('--verbose', dest='verbose', action='store_const', const=True, help='Enable verbose mode')
-    verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const', const=False, help='Disable verbose mode')
+    verbosity_group.add_argument('--verbose', dest='verbose', action='store_const',\
+                                 const=True, help='Enable verbose mode')
+    verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const',\
+                                 const=False, help='Disable verbose mode')
 
     # application options & parameters
     parser.add_argument('--param1', type=int, help="Parameter1")
@@ -65,7 +70,7 @@ def main():
 def run_app(config:Config) -> None:
     try:
         # Add real application code here.
-        logger.info(f"Running run_app")
+        logger.info("Running run_app")
         logger.info(f"config = {config.config}")
         pymodule.hello_from_core_module_a()
         pymodule.goodbye_from_core_module_a()

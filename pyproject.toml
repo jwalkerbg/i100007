@@ -33,6 +33,7 @@ rfc3986 = "*"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"  # Static type checker
 pathlib = ">=1.0"
+pylint = "^3.3.3"
 
 # Test dependencies
 [tool.poetry.group.test.dependencies]
