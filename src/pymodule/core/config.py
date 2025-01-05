@@ -22,7 +22,7 @@ class Config:
     DEFAULT_CONFIG = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.1.1",
+            'template_version': "3.1.2",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
@@ -91,13 +91,13 @@ class Config:
                 return toml.load(f)
 
         except FileNotFoundError as e:
-            logger.error(f"{e}")
+            logger.error("%s",str(e))
             raise e  # Optionally re-raise the exception if you want to propagate it
         except toml.TOMLDecodeError as e:
-            logger.error(f"Error: Failed to parse TOML file '{file_path}'. Invalid TOML syntax.")
+            logger.error("Error: Failed to parse TOML file '%s'. Invalid TOML syntax.",file_path)
             raise e  # Re-raise the exception for further handling
         except Exception as e:
-            logger.error(f"An unexpected error occurred while loading the TOML file: {e}")
+            logger.error("An unexpected error occurred while loading the TOML file: %s",str(e))
             raise e  # Catch-all for any other unexpected exceptions
 
     def load_config_file(self, file_path: str="config.toml") -> Dict:
@@ -106,16 +106,16 @@ class Config:
             return {}
         # Convert None to default value of 'config.json'
         if file_path is None:
-            logger.error(f"CFG: Using default '{file_path}'")
+            logger.error("CFG: Using default '%s'",file_path)
             file_path = 'config.toml'
         try:
             config_file = self.load_toml(file_path=file_path)
             validate(instance=config_file, schema=self.CONFIG_SCHEMA)
         except ValidationError as e:
-            logger.warning(f"Configuration validation error in {file_path}: {e}")
-            raise ValueError
+            logger.warning("Configuration validation error in %s: %s",file_path,str(e))
+            raise ValueError from e
         except Exception as e:
-            logger.error(f"Exception when trying to load {file_path}: {e}")
+            logger.error("Exception when trying to load %s: %s",file_path,str(e))
             raise e
 
         self.deep_update(config=self.config, config_file=config_file)

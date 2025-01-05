@@ -1,7 +1,6 @@
 # logger.py
 
 # logger_module.py
-from typing import List
 import logging
 from datetime import datetime
 
