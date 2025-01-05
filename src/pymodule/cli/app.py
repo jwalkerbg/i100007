@@ -53,7 +53,7 @@ def main():
     try:
         cfg.load_config_file(config_file)
     except Exception as e:
-        logger.info(f"Error with loading configuration file. Giving up.\n{e}")
+        logger.info("Error with loading configuration file. Giving up.\n%s",str(e))
         return
 
     # Step 4: Merge default config, config.json, and command-line arguments
@@ -71,7 +71,7 @@ def run_app(config:Config) -> None:
     try:
         # Add real application code here.
         logger.info("Running run_app")
-        logger.info(f"config = {config.config}")
+        logger.info("config = %s",str(config.config))
         pymodule.hello_from_core_module_a()
         pymodule.goodbye_from_core_module_a()
         pymodule.hello_from_core_module_b()
