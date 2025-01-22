@@ -22,7 +22,7 @@ class Config:
     DEFAULT_CONFIG = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.1.2",
+            'template_version': "3.1.3",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
