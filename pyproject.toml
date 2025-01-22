@@ -2,7 +2,9 @@
 name = "pymodule"
 version = "0.1.0"
 description = "A sample project driven by poetry, using C and Cython extensions"
+license = "MIT"
 authors = ["Ivan Cenov <i_cenov@botevgrad.com>"]
+repository = "https://github.com/jwalkerbg/i100007.git"
 readme = "README.md"
 packages = [{include = "pymodule", from = "src"}]
 # Additional files that shuld be added to sdist and wheel distributions.

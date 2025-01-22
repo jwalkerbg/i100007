@@ -22,7 +22,7 @@ class Config:
     DEFAULT_CONFIG = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.1.2",
+            'template_version': "3.1.3",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
@@ -105,7 +105,7 @@ class Config:
         if file_path == '':
             return {}
         # Convert None to default value of 'config.json'
-        if file_path is None:
+        if file_path == "config.toml":
             logger.error("CFG: Using default '%s'",file_path)
             file_path = 'config.toml'
         try:

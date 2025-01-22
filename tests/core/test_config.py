@@ -1,5 +1,5 @@
+import sys
 import pytest
-import tomllib
 import argparse
 from unittest.mock import patch, mock_open, MagicMock
 import pymodule
@@ -7,6 +7,12 @@ from pymodule import core
 #from core import config
 #from config import Config
 #from pymodule.logger import getAppLogger
+
+# Check Python version at runtime
+if sys.version_info >= (3, 11):
+    import tomllib as toml # Use the built-in tomllib for Python 3.11+
+else:
+    import tomli as toml # Use the external tomli for Python 3.7 to 3.10
 
 class TestConfig:
 
@@ -23,7 +29,7 @@ class TestConfig:
         assert config_instance.config == expected_config
 
     @patch('pymodule.core.config.open', new_callable=mock_open, read_data=b'{"parameters": {"param1": 10}}')
-    @patch('pymodule.core.config.tomllib.load')
+    @patch('pymodule.core.config.toml.load')
     def test_load_toml_success(self, mock_tomli_load, mock_open, config_instance):
         """
         Test that a valid TOML file is loaded correctly.
@@ -45,11 +51,11 @@ class TestConfig:
             mock_logger.error.assert_called_once()
 
     def test_load_config_file_invalid_syntax(self, config_instance):
-        # Mock the open and tomllib.load to simulate invalid TOML syntax
+        # Mock the open and toml.load to simulate invalid TOML syntax
         with patch('pymodule.core.config.open', new_callable=mock_open, read_data=b'invalid_toml_data'):
-            with patch('pymodule.core.config.tomllib.load', side_effect=tomllib.TOMLDecodeError("Invalid TOML", "", 0)):
+            with patch('pymodule.core.config.toml.load', side_effect=toml.TOMLDecodeError("Invalid TOML", "", 0)):
                 # Use pytest.raises to check if the appropriate exception is raised
-                with pytest.raises(tomllib.TOMLDecodeError):
+                with pytest.raises(toml.TOMLDecodeError):
                     config_instance.load_config_file(file_path='invalid_config.toml')
 
     @patch.object(pymodule.core.Config, 'load_toml', return_value={"parameters": {"param1": 10}})
@@ -77,7 +83,7 @@ class TestConfig:
         with patch('pymodule.core.config.logger') as mock_logger:
             with patch.object(core.Config, 'load_toml', return_value={"logging": {"verbose": False}}) as mock_load_toml:
                 config_instance.load_config_file()
-                mock_logger.error.assert_called_once_with("CFG: Using default 'None'")
+                mock_logger.error.assert_called_once_with("CFG: Using default '%s'",'config.toml')
                 mock_load_toml.assert_called_once_with(file_path="config.toml")
 
     # Deep Update Tests
