@@ -105,7 +105,7 @@ class Config:
         if file_path == '':
             return {}
         # Convert None to default value of 'config.json'
-        if file_path is None:
+        if file_path == "config.toml":
             logger.error("CFG: Using default '%s'",file_path)
             file_path = 'config.toml'
         try:
