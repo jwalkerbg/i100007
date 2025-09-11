@@ -28,6 +28,8 @@ jsonschema = "*"
 rfc3986 = "*"
 
 # Development dependencies
+mysql-connector-python = "^9.4.0"
+sqlalchemy = "^2.0.43"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"  # Static type checker
 pathlib = ">=1.0"
