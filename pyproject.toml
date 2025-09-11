@@ -12,11 +12,7 @@ include = [
     "pyproject.toml",
     "build.py",
     "README.md",
-    "src/pymodule/extensions/*",
-    "src/pymodule/extensions/hello_world/*",
-    "src/pymodule/extensions/worker/*",
-    "src/pymodule/extensions/cmodulea/*",
-    "src/pymodule/extensions/cmoduleb/*"
+    "src/pymodule/extensions/*"
 ]  # Compiled extensions
 
 # Runtime dependencies

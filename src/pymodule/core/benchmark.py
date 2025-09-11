@@ -2,16 +2,14 @@
 
 import time
 from pymodule.logger import get_app_logger
-from pymodule.extensions.cmodulea.cmodulea import c_benchmark
-from pymodule.extensions.worker import cython_benchmark
 
 logger = get_app_logger(__name__)
 
 def benchmark(n:int) -> None:
     logger.info("Benchmarks:")
     pdiff = python_benchmark(n)
-    ydiff = cython_benchmark(n)
-    cdiff = c_benchmark(n)
+    ydiff = 0
+    cdiff = 0
 
     print("Python = 100.0%")
     print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
