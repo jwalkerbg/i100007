@@ -35,8 +35,8 @@ def parse_args() -> argparse.Namespace:
 
     # application options & parameters
     param_group = parser.add_argument_group("Parameters")
-    param_group.add_argument('--param1', dest="param1", type=int, help="Parameter1")
-    param_group.add_argument('--param2', dest="param2", type=int, help="Parameter2")
+    param_group.add_argument('--param1', dest='param1', type=int, help="Parameter1")
+    param_group.add_argument('--param2', dest='param2', type=int, help="Parameter2")
 
     return parser.parse_args()
 

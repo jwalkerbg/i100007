@@ -1,5 +1,6 @@
 # core/config.py
 
+import os
 import sys
 from typing import Dict, Any, Mapping, TypedDict
 import argparse
@@ -173,7 +174,7 @@ class Config:
         env_overrides = {
             "parameters": {
                 "param1": os.getenv("PYMODULE_PARAM1"),
-                "jwt_expiry": os.getenv("PYMODULE_PARAM2")
+                "param2": os.getenv("PYMODULE_PARAM2")
             }
         }
         self.deep_update(config=self.config, config_file=env_overrides)
