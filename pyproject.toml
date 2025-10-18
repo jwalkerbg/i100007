@@ -102,7 +102,7 @@ libraries = []
 build_log = true
 
 [build-system]
-requires = ["poetry-core", "setuptools", "Cython"]
+requires = ["poetry-core", "setuptools", "Cython", "build"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.build]
