@@ -1,6 +1,6 @@
 # src/cli/app.py
 import argparse
-from importlib.metadata import version
+from importlib.metadata import version as pkg_version
 
 import pymodule
 from pymodule.core.config import Config

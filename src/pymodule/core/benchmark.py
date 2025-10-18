@@ -17,7 +17,7 @@ def benchmark(n:int) -> None:
     print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
     print(f"C      = {((cdiff / pdiff)*100.0)}%")
 
-def python_benchmark(n):
+def python_benchmark(n:int) -> float:
     start_time = time.time()
     for _ in range(n):
         python_fibonacci(300)
@@ -26,7 +26,7 @@ def python_benchmark(n):
     print(f"Python function executed in {diff:03.6f} milliseconds")
     return diff
 
-def python_fibonacci(n):
+def python_fibonacci(n:int) -> int:
     a, b = 0, 1
     for _ in range(n):
         a, b = b, a + b

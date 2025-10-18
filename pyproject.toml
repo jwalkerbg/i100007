@@ -46,7 +46,7 @@ pytest-mock = ">=3.0.0"
 
 [tool.mypy]
 # --- General settings ---
-python_version = ">= 3.13"
+python_version = "3.13"
 files = ["src"]
 namespace_packages = true
 ignore_missing_imports = false
@@ -77,6 +77,7 @@ exclude = [
     "dist/.*",
     "venv/.*",
     ".venv/.*",
+    "src/pymodule/extensions/.*",
     "www/*"
 ]
 # --- Plugin support (Flask, Pydantic, etc.) ---
