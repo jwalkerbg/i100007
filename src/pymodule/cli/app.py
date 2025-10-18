@@ -12,7 +12,7 @@ from pymodule.extensions.worker import worker_func
 
 logger = get_app_logger(__name__)
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
     parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides')
 
@@ -34,12 +34,13 @@ def parse_args():
                                  const=False, help='Disable verbose mode')
 
     # application options & parameters
-    parser.add_argument('--param1', type=int, help="Parameter1")
-    parser.add_argument('--param2', type=int, help="Parameter2")
+    param_group = parser.add_argument_group("Parameters")
+    param_group.add_argument('--param1', dest='param1', type=int, help="Parameter1")
+    param_group.add_argument('--param2', dest='param2', type=int, help="Parameter2")
 
     return parser.parse_args()
 
-def main():
+def main() -> None:
     """Main entry point of the CLI."""
 
     # Step 1: Create config object with default configuration
@@ -56,12 +57,19 @@ def main():
         logger.info("Error with loading configuration file. Giving up.\n%s",str(e))
         return
 
+    # Load config from environment variables (if set)
+    try:
+        cfg.load_config_env()
+    except Exception as e:
+        logger.info("Error with loading environment variables. Giving up.\n%s",str(e))
+        return
+
     # Step 4: Merge default config, config.json, and command-line arguments
     cfg.merge_options(args)
 
     # Step 5: Show version info or run the application with collected configuration
     if cfg.config['metadata']['version']:
-        app_version = version("pymodule")
+        app_version = pkg_version("pymodule")
         print(f"pymodule {app_version}")
     else:
         run_app(cfg)
@@ -84,9 +92,12 @@ def run_app(config:Config) -> None:
         worker_func()
 
         pymodule.core.benchmark.benchmark(500000)
+    except ValueError as e:
+        logger.error("Error in application run: %s",str(e))
+    except Exception as e:
+        logger.error("Unexpected error in application run: %s",str(e))
     finally:
         logger.info("Exiting run_app")
-
 
 if __name__ == "__main__":
     main()

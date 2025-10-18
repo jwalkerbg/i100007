@@ -1,7 +1,8 @@
 # core/config.py
 
+import os
 import sys
-from typing import Dict, Any
+from typing import Dict, Any, Mapping, TypedDict
 import argparse
 from jsonschema import validate, ValidationError
 
@@ -15,18 +16,39 @@ if sys.version_info >= (3, 11):
 else:
     import tomli as toml # Use the external tomli for Python 3.7 to 3.10
 
+class TemplateConfig(TypedDict, total=False):
+    template_name: str
+    template_version: str
+    template_description: Dict[str, Any]
+
+class MetaDataConfig(TypedDict, total=False):
+    version: str
+
+class LoggingConfig(TypedDict, total=False):
+    verbose: bool
+
+class ParametersConfig(TypedDict, total=False):
+    param1: int
+    param2: int
+
+class ConfigDict(TypedDict):
+    template: TemplateConfig
+    metadata: MetaDataConfig
+    logging: LoggingConfig
+    parameters: ParametersConfig
+
 class Config:
     def __init__(self) -> None:
-        self.config = self.DEFAULT_CONFIG
+        self.config: ConfigDict = self.DEFAULT_CONFIG
 
-    DEFAULT_CONFIG = {
+    DEFAULT_CONFIG: ConfigDict = {
         'template': {
             'template_name': "pymodule",
             'template_version': "3.1.3",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
-            'version': False
+            'version': "1.0.1"
         },
         'logging': {
             'verbose': False
@@ -76,7 +98,7 @@ class Config:
         "additionalProperties": False
     }
 
-    def load_toml(self,file_path) -> Dict:
+    def load_toml(self,file_path:str) -> Dict[str, Any]:
         """
         Load a TOML file with exception handling.
 
@@ -100,13 +122,13 @@ class Config:
             logger.error("An unexpected error occurred while loading the TOML file: %s",str(e))
             raise e  # Catch-all for any other unexpected exceptions
 
-    def load_config_file(self, file_path: str="config.toml") -> Dict:
+    def load_config_file(self, file_path: str="config.toml") -> Dict[str, Any]:
         # skip the configuration file if an empty name is given
         if file_path == '':
             return {}
         # Convert None to default value of 'config.json'
         if file_path == "config.toml":
-            logger.error("CFG: Using default '%s'",file_path)
+            logger.warning("CFG: Using default '%s'",file_path)
             file_path = 'config.toml'
         try:
             config_file = self.load_toml(file_path=file_path)
@@ -122,7 +144,7 @@ class Config:
 
         return config_file
 
-    def deep_update(self,config: Dict[str, Any], config_file: Dict[str, Any]) -> None:
+    def deep_update(self,config:Mapping[str, Any], config_file: Dict[str, Any]) -> None:
         """
         Recursively updates a dictionary (`config`) with the contents of another dictionary (`config_file`).
         It performs a deep merge, meaning that if a key contains a nested dictionary in both `config`
@@ -140,10 +162,27 @@ class Config:
                 # If both values are dictionaries, recurse to merge deeply
                 self.deep_update(config[key], value)
             else:
-                # Otherwise, update the key with the new value from config_file
-                config[key] = value
+                # Otherwise, update the key with the new value from config_file if it is present there
+                if value is not None:
+                    config[key] = value
 
-    def merge_options(self, config_cli:argparse.Namespace=None) -> Dict:
+    def load_config_env(self) -> ConfigDict:
+        """
+        Load configuration from environment variables.
+
+        :return: Updated configuration dictionary
+        """
+        env_overrides = {
+            "parameters": {
+                "param1": os.getenv("PYMODULE_PARAM1"),
+                "param2": os.getenv("PYMODULE_PARAM2")
+            }
+        }
+        self.deep_update(config=self.config, config_file=env_overrides)
+
+        return self.config
+
+    def merge_options(self, config_cli: argparse.Namespace | None = None) -> ConfigDict:    # pylint: disable=too-many-branches
         # handle CLI options if started from CLI interface
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
