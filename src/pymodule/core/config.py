@@ -26,6 +26,7 @@ class MetaDataConfig(TypedDict, total=False):
 
 class LoggingConfig(TypedDict, total=False):
     verbose: bool
+    version_option: bool
 
 class ParametersConfig(TypedDict, total=False):
     param1: int
@@ -44,14 +45,15 @@ class Config:
     DEFAULT_CONFIG: ConfigDict = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.3.0",
+            'template_version': "3.3.1",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'metadata': {
             'version': "1.0.1"
         },
         'logging': {
-            'verbose': False
+            'verbose': False,
+            'version_option': False
         },
         'parameters': {
             'param1': 1,
@@ -77,6 +79,9 @@ class Config:
                 "type": "object",
                 "properties": {
                     "verbose": {
+                        "type": "boolean"
+                    },
+                    "version_option": {
                         "type": "boolean"
                     }
                 },
@@ -182,13 +187,14 @@ class Config:
 
         return self.config
 
-    def merge_options(self, config_cli: argparse.Namespace | None = None) -> ConfigDict:    # pylint: disable=too-many-branches
+    def merge_cli_options(self, config_cli: argparse.Namespace | None = None) -> ConfigDict:    # pylint: disable=too-many-branches
         # handle CLI options if started from CLI interface
         # replace param1 and param2 with actual parameters, defined in app:parse_args()
         if config_cli:
 
-            if config_cli.app_version is not None:
-                self.config['metadata']['version'] = config_cli.app_version
+            if config_cli.version_option is not None:
+                self.config['logging']['version_option'] = config_cli.version_option
+
             # Handle general options
             if config_cli.verbose is not None:
                 self.config['logging']['verbose'] = config_cli.verbose
@@ -200,3 +206,66 @@ class Config:
                 self.config['parameters']['param2'] = config_cli.param2
 
         return self.config
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
+    parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides')
+
+    # configuration file name
+    parser.add_argument('--config', type=str, dest='config', default='config.toml',\
+                        help="Name of the configuration file, default is 'config.toml'")
+    parser.add_argument('--no-config', action='store_const', const='', dest='config',\
+                        help="Do not use a configuration file (only defaults & options)")
+
+    # version
+    parser.add_argument('-v', dest='version_option', action='store_true', default = False, help='Show version information of the module')
+
+    # Verbosity option
+    verbosity_group = parser.add_mutually_exclusive_group()
+    verbosity_group.add_argument('--verbose', dest='verbose', action='store_const',\
+                                 const=True, help='Enable verbose mode')
+    verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const',\
+                                 const=False, help='Disable verbose mode')
+
+    # application options & parameters
+    param_group = parser.add_argument_group("Parameters")
+    param_group.add_argument('--param1', dest='param1', type=int, help="Parameter1")
+    param_group.add_argument('--param2', dest='param2', type=int, help="Parameter2")
+
+    return parser.parse_args()
+
+def get_app_configuration() -> ConfigDict:
+    """Get the application configuration.
+
+    This function initializes the Config class, loads the configuration file,
+    applies environment variable overrides, and returns the final configuration.
+
+    Returns:
+        ConfigDict: The final application configuration.
+    """
+
+    # Step 1: Create config object with default configuration
+    config_instance = Config()
+
+    # Step 2: Parse command-line arguments
+    args = parse_args()
+
+    # Step 3: Try to load configuration from configuration file
+    config_file = args.config
+    try:
+        config_instance.load_config_file(config_file)
+    except Exception as e:
+        logger.info("Error with loading configuration file. Giving up.\n%s",str(e))
+        raise
+
+    # Step 4: Load config from environment variables (if set)
+    try:
+        config_instance.load_config_env()
+    except Exception as e:
+        logger.info("Error with loading environment variables. Giving up.\n%s",str(e))
+        raise
+
+    # Step 5: Merge default config, config.json, and command-line arguments
+    config_instance.merge_cli_options(args)
+
+    return config_instance
