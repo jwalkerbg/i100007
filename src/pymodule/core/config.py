@@ -218,7 +218,7 @@ def parse_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
-def get_app_configuration() -> ConfigDict:
+def get_app_configuration() -> Config:
     """Get the application configuration.
 
     This function initializes the Config class, loads the configuration file,
