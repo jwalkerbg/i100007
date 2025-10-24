@@ -15,11 +15,11 @@ from pymodule.extensions.worker import worker_func
 logger = get_app_logger(__name__)
 
 # CLI application main function with collected options & configuration
-def run_app(config:Config) -> None:
+def run_app(cfg:Config) -> None:
     try:
         # Add real application code here.
         logger.info("Running run_app")
-        logger.info("config = %s",str(config.config))
+        logger.info("config = %s",str(cfg.config))
         pymodule.hello_from_core_module_a()
         pymodule.goodbye_from_core_module_a()
         pymodule.hello_from_core_module_b()
