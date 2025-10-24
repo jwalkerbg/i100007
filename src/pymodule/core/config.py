@@ -21,9 +21,6 @@ class TemplateConfig(TypedDict, total=False):
     template_version: str
     template_description: Dict[str, Any]
 
-class MetaDataConfig(TypedDict, total=False):
-    version: str
-
 class LoggingConfig(TypedDict, total=False):
     verbose: bool
     version_option: bool
@@ -34,7 +31,6 @@ class ParametersConfig(TypedDict, total=False):
 
 class ConfigDict(TypedDict):
     template: TemplateConfig
-    metadata: MetaDataConfig
     logging: LoggingConfig
     parameters: ParametersConfig
 
@@ -47,9 +43,6 @@ class Config:
             'template_name': "pymodule",
             'template_version': "3.3.1",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
-        },
-        'metadata': {
-            'version': "1.0.1"
         },
         'logging': {
             'verbose': False,
@@ -66,15 +59,6 @@ class Config:
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "properties": {
-            "metadata": {
-                "type": "object",
-                "properties": {
-                    "version": {
-                        "type": "boolean"
-                    }
-                },
-                "additionalProperties": False
-            },
             "logging": {
                 "type": "object",
                 "properties": {
@@ -249,6 +233,10 @@ def get_app_configuration() -> ConfigDict:
 
     # Step 2: Parse command-line arguments
     args = parse_args()
+    if args.version_option:
+        # If version option is requested, skip loading other configurations
+        config_instance.config['logging']['version_option'] = True
+        return config_instance
 
     # Step 3: Try to load configuration from configuration file
     config_file = args.config
