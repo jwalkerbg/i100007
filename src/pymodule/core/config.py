@@ -29,10 +29,15 @@ class ParametersConfig(TypedDict, total=False):
     param1: int
     param2: int
 
+class PositionalsConfig(TypedDict, total=False):
+    input_file: str
+    output_file: str
+
 class ConfigDict(TypedDict):
     template: TemplateConfig
     logging: LoggingConfig
     parameters: ParametersConfig
+    positionals: PositionalsConfig
 
 class Config:
     def __init__(self) -> None:
@@ -41,7 +46,7 @@ class Config:
     DEFAULT_CONFIG: ConfigDict = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.3.1",
+            'template_version': "3.4.1",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'logging': {
@@ -51,6 +56,10 @@ class Config:
         'parameters': {
             'param1': 1,
             'param2': 2
+        },
+        'positionals': {
+            'input_file': '',
+            'output_file': ''
         }
     }
 
@@ -79,6 +88,18 @@ class Config:
                     },
                     "param2": {
                         "type": "number"
+                    }
+                },
+                "additionalProperties": False
+            },
+            "positionals": {
+                "type": "object",
+                "properties": {
+                    "input_file": {
+                        "type": "string"
+                    },
+                    "output_file": {
+                        "type": "string"
                     }
                 },
                 "additionalProperties": False
@@ -165,6 +186,10 @@ class Config:
             "parameters": {
                 "param1": os.getenv("PYMODULE_PARAM1"),
                 "param2": os.getenv("PYMODULE_PARAM2")
+            },
+            "positionals": {
+                "input_file": os.getenv("PYMODULE_INPUT_FILE"),
+                "output_file": os.getenv("PYMODULE_OUTPUT_FILE")
             }
         }
         self.deep_update(config=self.config, config_file=env_overrides)
@@ -189,6 +214,12 @@ class Config:
             if config_cli.param2 is not None:
                 self.config['parameters']['param2'] = config_cli.param2
 
+            # positional parameters
+            if hasattr(config_cli, 'input_file') and config_cli.input_file is not None:
+                self.config['positionals']['input_file'] = config_cli.input_file
+            if hasattr(config_cli, 'output_file') and config_cli.output_file is not None:
+                self.config['positionals']['output_file'] = config_cli.output_file
+
         return self.config
 
 def parse_args() -> argparse.Namespace:
@@ -212,9 +243,13 @@ def parse_args() -> argparse.Namespace:
                                  const=False, help='Disable verbose mode')
 
     # application options & parameters
-    param_group = parser.add_argument_group("Parameters")
+    param_group = parser.add_argument_group("Options")
     param_group.add_argument('--param1', dest='param1', type=int, help="Parameter1")
     param_group.add_argument('--param2', dest='param2', type=int, help="Parameter2")
+
+    positional_group = parser.add_argument_group("Parameters")
+    positional_group.add_argument('input_file', type=str, nargs="?", help="Input file")
+    positional_group.add_argument('output_file', type=str, nargs="?", help="Output file")
 
     return parser.parse_args()
 
