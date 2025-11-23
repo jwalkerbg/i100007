@@ -237,7 +237,7 @@ This project contains a benchmark functions to show how much faster is Cython vs
 
 ## Configuration system.
 
-The configuration system of the module is implemented in `core/config.py` and `cli/app.py`. It is organized at four levels:
+The configuration system of the module is implemented in `core/config.py`. It is organized at four levels:
 
 * default settings, hard-coded in the source of the module
 * configuration file, by default `config.toml` in current directory
@@ -246,7 +246,7 @@ The configuration system of the module is implemented in `core/config.py` and `c
 
 The line of priority is (lowest) `default settings` -> `configuration file` -> `environment variables` -> `command line options` (highest).
 
-Default configuration is in `pymodule.core.config.py`. Configuration file is in `toml` format. There are lots of information about `toml` files in the Internet. Command line options are implemented in `pymodule.cli.app`.
+Default configuration is in `pymodule.core.config.py`. Configuration file is in `toml` format. There are lots of information about `toml` files in the Internet.
 
 Application configuration is implemented in `pymodule.core.config` in `class Config`.
 
@@ -255,6 +255,22 @@ The default configuration comes with information about `pymodule` template metad
 Logging configuration is in `logging`. It can be changed with other values in the configuration file or with CLI option. By now, one option is available - `--verbose`.
 
 Application options consist of two example options - `param` and `param2` from type `int`. They are here to demonstrate the implementation. These options are in configuration options and at CLI.
+
+The configuration supports positional parameters as well.
+
+```bash
+pymodule -v input_file.txt output_file.txt --other_option
+```
+
+These positional parameters can be added in `config.toml` in `[positionals]` section. Example:
+
+```bash
+[positionals]
+input_file = "input_from_config.txt"
+output_file = "output_from_config.txt"
+```
+
+As can be expected, they can appear in OS environment too. See the function `load_config_env` in `config.py`. The `Dict` variable `env_overrides` contains an example of such parameters.
 
 For consistency, each option on command line should have a configuration option in the default configuration and/or the configuration file.
 
