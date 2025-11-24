@@ -1,12 +1,15 @@
 # src/pymodule/cyth/worker.pyx
 
 import time
+from pymodule.logger import get_app_logger
+
+logger = get_app_logger(__name__)
 
 def worker_func():
-    print("Worker")
+    logger.info("Worker")
     for i in range(5):
-        print(f"i = {i}")
-    print("Worker finished")
+        logger.info(f"i = {i}")
+    logger.info("Worker finished")
 
 def cython_benchmark(int n):
     cdef int i
@@ -19,7 +22,7 @@ def cython_benchmark(int n):
 
     end_time = time.time()
     diff = ((end_time - start_time) * 1000.0)
-    print(f"Cython function executed in {diff:03.6f} milliseconds")
+    logger.info(f"Cython function executed in {diff:03.6f} milliseconds")
     return diff
 
 def cython_fibonacci(int n):
