@@ -22,7 +22,9 @@ class TemplateConfig(TypedDict, total=False):
     template_description: Dict[str, Any]
 
 class LoggingConfig(TypedDict, total=False):
-    verbose: bool
+    verbose: int
+    log_prefix: bool
+    use_string_handler: bool
     version_option: bool
 
 class ParametersConfig(TypedDict, total=False):
@@ -50,7 +52,9 @@ class Config:
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'logging': {
-            'verbose': False,
+            'verbose': 3,
+            'log_prefix': True,
+            'use_string_handler': False,
             'version_option': False
         },
         'parameters': {
@@ -72,6 +76,14 @@ class Config:
                 "type": "object",
                 "properties": {
                     "verbose": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 6
+                    },
+                    "log_prefix": {
+                        "type": "boolean"
+                    },
+                    "use_string_handler": {
                         "type": "boolean"
                     },
                     "version_option": {
@@ -207,6 +219,10 @@ class Config:
             # Handle general options
             if config_cli.verbose is not None:
                 self.config['logging']['verbose'] = config_cli.verbose
+            if config_cli.log_prefix is not None:
+                self.config['logging']['log_prefix'] = config_cli.log_prefix
+            if config_cli.use_string_handler is not None:
+                self.config['logging']['use_string_handler'] = config_cli.use_string_handler
 
             # sample parameters that should be changed in real applications
             if config_cli.param1 is not None:
@@ -226,24 +242,73 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
     parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides', epilog=f'Priority: (lowest) defaults -> config file -> environment variables -> CLI options (highest)')
 
-    # configuration file name
-    parser.add_argument('--config', type=str, dest='config', default='config.toml',\
-                        help="Name of the configuration file, default is 'config.toml'")
-    parser.add_argument('--no-config', action='store_const', const='', dest='config',\
-                        help="Do not use a configuration file (only defaults & options)")
+    # -------------------
+    # General options
+    # -------------------
+    general_group = parser.add_argument_group("General Options")
+    general_group.add_argument(
+        '--config',
+        type=str,
+        dest='config',
+        default='config.toml',
+        help="Name of the configuration file, default is 'config.toml'"
+    )
+    general_group.add_argument(
+        '--no-config',
+        action='store_const',
+        const='',
+        dest='config',
+        help="Do not use a configuration file (only defaults & options)"
+    )
+    general_group.add_argument(
+        '-v',
+        dest='version_option',
+        action='store_true',
+        default=False,
+        help='Show version information of the module'
+    )
 
-    # version
-    parser.add_argument('-v', dest='version_option', action='store_true', default = False, help='Show version information of the module')
+    # -------------------
+    # Verbosity options
+    # -------------------
+    verbosity_group = parser.add_argument_group("Verbosity Options")
+    verbosity_group.add_argument(
+        '--verbose',
+        type=int,
+        choices=[0, 1, 2, 3, 4, 5, 6],
+        dest='verbose',
+        help="Verbosity level: 0=CRITICAL, 1=ERROR, 2=WARNING, 3=QUIET, 4=INFO, 5=VERBOSE, 6=DEBUG. Default hardcoded is 3 or taken from config file/environment variable."
+    )
+    prefix_group = verbosity_group.add_mutually_exclusive_group()
+    prefix_group.add_argument(
+        "--log-prefix",
+        action="store_true",
+        dest="log_prefix",
+        help="Enable log prefixes (timestamp, module, level)"
+    )
+    prefix_group.add_argument(
+        "--no-log-prefix",
+        action="store_false",
+        dest="log_prefix",
+        help="Disable log prefixes (print only the message)"
+    )
+    string_handler_group = verbosity_group.add_mutually_exclusive_group()
+    string_handler_group.add_argument(
+        "--use-string-handler",
+        action="store_true",
+        dest="use_string_handler",
+        help="Enable string handler to store logs in an internal buffer"
+    )
+    string_handler_group.add_argument(
+        "--no-use-string-handler",
+        action="store_false",
+        dest="use_string_handler",
+        help="Disable string handler to store logs in an internal buffer"
+    )
 
-    # Verbosity option
-    verbosity_group = parser.add_mutually_exclusive_group()
-    verbosity_group.add_argument('--verbose', dest='verbose', action='store_const',\
-                                 const=True, help='Enable verbose mode')
-    verbosity_group.add_argument('--no-verbose', dest='verbose', action='store_const',\
-                                 const=False, help='Disable verbose mode')
 
     # application options & parameters
-    param_group = parser.add_argument_group("Options")
+    param_group = parser.add_argument_group("Parameters")
     param_group.add_argument('--param1', dest='param1', type=int, help="Parameter1")
     param_group.add_argument('--param2', dest='param2', type=int, help="Parameter2")
 

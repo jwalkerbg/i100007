@@ -10,4 +10,6 @@ input_file = "input_from_config.txt"
 output_file = "output_from_config.txt"
 
 [logging]
-verbose = true
+verbose = 3
+log_prefix = false
+use_string_handler = false
