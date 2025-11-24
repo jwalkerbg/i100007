@@ -282,26 +282,30 @@ def parse_args() -> argparse.Namespace:
     prefix_group = verbosity_group.add_mutually_exclusive_group()
     prefix_group.add_argument(
         "--log-prefix",
-        action="store_true",
+        action="store_const",
+        const=True,
         dest="log_prefix",
         help="Enable log prefixes (timestamp, module, level)"
     )
     prefix_group.add_argument(
         "--no-log-prefix",
-        action="store_false",
+        action="store_const",
+        const=False,
         dest="log_prefix",
         help="Disable log prefixes (print only the message)"
     )
     string_handler_group = verbosity_group.add_mutually_exclusive_group()
     string_handler_group.add_argument(
         "--use-string-handler",
-        action="store_true",
+        action="store_const",
+        const=True,
         dest="use_string_handler",
         help="Enable string handler to store logs in an internal buffer"
     )
     string_handler_group.add_argument(
         "--no-use-string-handler",
-        action="store_false",
+        action="store_const",
+        const=False,
         dest="use_string_handler",
         help="Disable string handler to store logs in an internal buffer"
     )
