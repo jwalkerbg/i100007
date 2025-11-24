@@ -13,9 +13,9 @@ def benchmark(n:int) -> None:
     ydiff = cython_benchmark(n)
     cdiff = c_benchmark(n)
 
-    print("Python = 100.0%")
-    print(f"Cython = {((ydiff / pdiff) * 100.0)}%")
-    print(f"C      = {((cdiff / pdiff)*100.0)}%")
+    logger.info("Python = 100.0%")
+    logger.info(f"Cython = {((ydiff / pdiff) * 100.0)}%")
+    logger.info(f"C      = {((cdiff / pdiff)*100.0)}%")
 
 def python_benchmark(n:int) -> float:
     start_time = time.time()
@@ -23,7 +23,7 @@ def python_benchmark(n:int) -> float:
         python_fibonacci(300)
     end_time = time.time()
     diff = (end_time - start_time) * 1000.0
-    print(f"Python function executed in {diff:03.6f} milliseconds")
+    logger.info(f"Python function executed in {diff:03.6f} milliseconds")
     return diff
 
 def python_fibonacci(n:int) -> int:
