@@ -24,6 +24,7 @@ class TemplateConfig(TypedDict, total=False):
 class LoggingConfig(TypedDict, total=False):
     verbose: int
     log_prefix: bool
+    use_color: bool
     use_string_handler: bool
     version_option: bool
 
@@ -54,6 +55,7 @@ class Config:
         'logging': {
             'verbose': 3,
             'log_prefix': True,
+            'use_color': True,
             'use_string_handler': False,
             'version_option': False
         },
@@ -81,6 +83,9 @@ class Config:
                         "maximum": 6
                     },
                     "log_prefix": {
+                        "type": "boolean"
+                    },
+                    "use_color": {
                         "type": "boolean"
                     },
                     "use_string_handler": {
@@ -221,6 +226,8 @@ class Config:
                 self.config['logging']['verbose'] = config_cli.verbose
             if config_cli.log_prefix is not None:
                 self.config['logging']['log_prefix'] = config_cli.log_prefix
+            if config_cli.use_color is not None:
+                self.config['logging']['use_color'] = config_cli.use_color
             if config_cli.use_string_handler is not None:
                 self.config['logging']['use_string_handler'] = config_cli.use_string_handler
 
@@ -269,17 +276,17 @@ def parse_args() -> argparse.Namespace:
     )
 
     # -------------------
-    # Verbosity options
+    # Logging options
     # -------------------
-    verbosity_group = parser.add_argument_group("Verbosity Options")
-    verbosity_group.add_argument(
+    logging_group = parser.add_argument_group("Logging Options")
+    logging_group.add_argument(
         '--verbose',
         type=int,
         choices=[0, 1, 2, 3, 4, 5, 6],
         dest='verbose',
         help="Verbosity level: 0=CRITICAL, 1=ERROR, 2=WARNING, 3=QUIET, 4=INFO, 5=VERBOSE, 6=DEBUG. Default hardcoded is 3 or taken from config file/environment variable."
     )
-    prefix_group = verbosity_group.add_mutually_exclusive_group()
+    prefix_group = logging_group.add_mutually_exclusive_group()
     prefix_group.add_argument(
         "--log-prefix",
         action="store_const",
@@ -294,7 +301,22 @@ def parse_args() -> argparse.Namespace:
         dest="log_prefix",
         help="Disable log prefixes (print only the message)"
     )
-    string_handler_group = verbosity_group.add_mutually_exclusive_group()
+    color_group = logging_group.add_mutually_exclusive_group()
+    color_group.add_argument(
+        "--use-color",
+        action="store_const",
+        const=True,
+        dest="use_color",
+        help="Enable colored log output"
+    )
+    color_group.add_argument(
+        "--no-use-color",
+        action="store_const",
+        const=False,
+        dest="use_color",
+        help="Disable colored log output"
+    )
+    string_handler_group = logging_group.add_mutually_exclusive_group()
     string_handler_group.add_argument(
         "--use-string-handler",
         action="store_const",

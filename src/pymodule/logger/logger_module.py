@@ -83,7 +83,7 @@ COLORS = {
 # ================================================================
 class ColorFormatter(logging.Formatter):
 
-    def __init__(self, prefix_enabled: bool):
+    def __init__(self, prefix_enabled: bool, use_color: bool = True):
         if prefix_enabled:
             fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         else:
@@ -91,12 +91,13 @@ class ColorFormatter(logging.Formatter):
 
         super().__init__(fmt)
         self.prefix_enabled = prefix_enabled
+        self.use_color = use_color
 
     def format(self, record: logging.LogRecord) -> str:
         message = super().format(record)
 
-        color = COLORS.get(record.levelname, "")
-        return f"{color}{message}{RESET}"
+        color = COLORS.get(record.levelname, "") if self.use_color else ""
+        return f"{color}{message}{RESET}" if self.use_color else message
 
 
 # ================================================================
@@ -135,6 +136,7 @@ string_handler_instance = None  # global to reuse
 # ================================================================
 def setup_logging(verbosity: int = 3,
                   log_prefix: bool = True,
+                  use_color: bool = True,
                   use_string_handler: bool = False):
     """
     Configure logging with custom levels, prefix toggle, color output,
@@ -162,7 +164,7 @@ def setup_logging(verbosity: int = 3,
     # -----------------------------------------
     # Create formatter
     # -----------------------------------------
-    formatter = ColorFormatter(prefix_enabled=log_prefix)
+    formatter = ColorFormatter(prefix_enabled=log_prefix, use_color=use_color)
 
     # -----------------------------------------
     # STREAM HANDLER (stdout) — avoid duplicates

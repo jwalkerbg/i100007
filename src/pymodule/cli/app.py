@@ -15,7 +15,7 @@ def main() -> None:
     # Step 1: Collect configuration from defaults, configuration file, and environment variables and CLI options
     cfg = get_app_configuration()
     # Step 2: Setup logging according to collected configuration
-    setup_logging(cfg.config['logging']['verbose'], cfg.config['logging']['log_prefix'], cfg.config['logging']['use_string_handler'])
+    setup_logging(cfg.config['logging']['verbose'], cfg.config['logging']['log_prefix'], cfg.config['logging']['use_color'], cfg.config['logging']['use_string_handler'])
 
     # Step 3: Show version info or run the application with collected configuration
     if cfg.config['logging']['version_option']:

@@ -11,5 +11,6 @@ output_file = "output_from_config.txt"
 
 [logging]
 verbose = 3
-log_prefix = false
+log_prefix = true
+use_color = true
 use_string_handler = false
