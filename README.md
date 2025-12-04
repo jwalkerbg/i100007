@@ -28,6 +28,7 @@
     - [Customizing Test Discovery](#customizing-test-discovery)
     - [Running tests with test coverage](#running-tests-with-test-coverage)
   - [Start a new project from pymodule](#start-a-new-project-from-pymodule)
+  - [Deployment](#deployment)
 
 
 ## Introduction
@@ -457,3 +458,9 @@ The project must be installed par example with `pip install -e .` to work with t
     * `[tool.setuptools]`
     * `[tool.setuptools.packages.find]`
     * `[tool.pytest.ini_options]`
+
+## Deployment
+
+As seen above, two types of distreubtion packages can be produced: `sdist` and `wheel`. These are (for example) `pymodule-0.1.0-cp312-cp312-manylinux_2_39_x86_64.whl` and `pymodule-0.1.0.tar.gz`. They cann be sent to users and they to install them by `pip install` or `pipx install`.
+
+If possible, they can be uploaded to https://PyPi.com
