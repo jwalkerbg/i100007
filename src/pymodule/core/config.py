@@ -49,7 +49,7 @@ class Config:
     DEFAULT_CONFIG: ConfigDict = {
         'template': {
             'template_name': "pymodule",
-            'template_version': "3.6.1",
+            'template_version': "4.0.1",
             'template_description': { 'text': """Template with CLI interface, configuration options in a file, logger and unit tests""", 'content-type': "text/plain" }
         },
         'logging': {
