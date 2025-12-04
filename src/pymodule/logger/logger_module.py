@@ -3,6 +3,7 @@
 # logger_module.py
 import sys
 import logging
+import colorama
 from typing import Optional
 from datetime import datetime
 
@@ -63,6 +64,8 @@ if not hasattr(logging, "VERBOSE"):
             self._log(VERBOSE_LEVEL, msg, args, **kwargs)
     logging.Logger.verbose = verbose
 
+# Initialize colorama for Windows ANSI support
+colorama.init()
 
 # ================================================================
 #  Color map
