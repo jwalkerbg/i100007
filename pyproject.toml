@@ -12,15 +12,11 @@ include = [
     "pyproject.toml",
     "build.py",
     "README.md",
-    "src/pymodule/extensions/__init__.py",
-    "src/pymodule/extensions/hello_world/*.pyx",
-    "src/pymodule/extensions/worker/*.pyx",
-    "src/pymodule/extensions/cmodulea/**",
-    "src/pymodule/extensions/cmoduleb/**"
+    "src/pymodule/**"
 ]  # Compiled extensions
 exclude = [
     "src/pymodule/extensions/hello_world/hello_world.c",
-    "src/pymodule/extensions/worker/worker.c",
+    "src/pymodule/extensions/worker/worker.c"
 ]
 
 # Custom package indexes to take precedency over official https://pypi.org/simple
