@@ -15,8 +15,11 @@ include = [
     "src/pymodule/**"
 ]
 exclude = [
+    # Exclude intermediate C and html files from Cython extensions
     "src/pymodule/extensions/hello_world/hello_world.c",
-    "src/pymodule/extensions/worker/worker.c"
+    "src/pymodule/extensions/hello_world/hello_world.html",
+    "src/pymodule/extensions/worker/worker.c",
+    "src/pymodule/extensions/worker/worker.html"
 ]
 
 # Custom package indexes to take precedency over official https://pypi.org/simple
