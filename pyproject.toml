@@ -19,6 +19,19 @@ include = [
     "src/pymodule/extensions/cmoduleb/*"
 ]  # Compiled extensions
 
+# Custom package indexes to take precedency over official https://pypi.org/simple
+# To use this a pypi server must be hosted internally at the specified URL.
+# Good simple however working choice is to use pypiserver (https://pypi.org/project/pypiserver/)
+# Edit below URL to match your internal pypi server address.
+# poetry will first try to fetch packages from this server before going to the official PyPI.
+# This is useful for companies that want to cache packages internally or host private packages.
+# Make sure to configure authentication if your pypi server requires it.
+# See Poetry documentation for more details: https://python-poetry.org/docs/repositories/#using-private-repositories
+# [[tool.poetry.source]]
+# name = "mycompany-pypi"
+# url = "http://pypi.mycompany.com/simple"
+# priority = "primary"
+
 # Runtime dependencies
 [tool.poetry.dependencies]
 python = ">=3.12"
