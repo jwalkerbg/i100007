@@ -29,6 +29,10 @@
     - [Running tests with test coverage](#running-tests-with-test-coverage)
   - [Start a new project from pymodule](#start-a-new-project-from-pymodule)
   - [Deployment](#deployment)
+    - [Preparing packages for different OS.](#preparing-packages-for-different-os)
+    - [Setting up local company PyPi server.](#setting-up-local-company-pypi-server)
+    - [Client side configuration.](#client-side-configuration)
+  - [Installers: pip vs pipx](#installers-pip-vs-pipx)
 
 
 ## Introduction
@@ -461,6 +465,208 @@ The project must be installed par example with `pip install -e .` to work with t
 
 ## Deployment
 
-As seen above, two types of distreubtion packages can be produced: `sdist` and `wheel`. These are (for example) `pymodule-0.1.0-cp312-cp312-manylinux_2_39_x86_64.whl` and `pymodule-0.1.0.tar.gz`. They cann be sent to users and they to install them by `pip install` or `pipx install`.
+As seen above, two types of distribution packages are produced: `sdist` and `wheel`. These are (example) `pymodule-0.1.0.tar.gz` and `pymodule-0.1.0-cp312-cp312-manylinux_2_39_x86_64.whl`. They can be sent to users and they to install them by `pip install` or `pipx install`.
 
-If possible, they can be uploaded to https://PyPi.com
+If possible, they can be uploaded to https://PyPi.org for whole world usage.
+
+### Preparing packages for different OS.
+
+This process depends on whether the application have C/Cython extensions or not. If it does not use such extensions, te work is easy. Just execute
+```bash
+cd path_to_the root_of_the_project
+rm -rf dist build
+poetry build
+```
+This will produce `sdist` and `wheel` packages in `dist` directory. The packages can be used for installing in Windows, Linux, MacOS even they depend on other pckages that have C/Cython extensions.
+
+The situation with application taht have C/Cython extensions is more complicated. Distributable packages Packages must be built on the system they are intended to be installed on. This means that repository shall be `git cloned` to Windows for Windows packages,
+to Linux for Linux packages and so on.
+
+Why is it so complicated? Why there are no any-OS packages and there is no cross-OS building?
+
+A wheel contains native binary code (.so, .pyd, .dll). This code is compiled using
+* the compiler in the host OS
+* the OS ABI (`ABI` = Application Binary Interface. The OS ABI is the set of rules that define how compiled programs interact with the operating system and with other compiled code.)
+* the OS's Python runtime
+
+So:
+* `Windows` → produces a `win_amd64` wheel
+* `Linux` → produces a `manylinux_x86_64` wheel
+* `macOS` → produces a `macosx_x86_64` / `arm64` wheel
+
+There is `no built-in mechanism` in Poetry or setuptools to compile code for another OS.
+
+This is by design → cross-compiling Python extension modules is extremely difficult.
+
+### Setting up local company PyPi server.
+
+This task can be completed using [pypiserver](https://pypi.org/project/pypiserver/). `pypiserver` can be run on Linux, Windows, may be on MacOS as well. The documentation of the pypiserver is at https://github.com/pypiserver/pypiserver.
+
+An example how to start pypiserver on Windows is
+
+```bash
+set PYTHONHOME=c:\Python\Python313
+C:\Python\Python313\Scripts\pypi-server.exe run -p 3011 e:\data\pypi -P e:\data\pypi\passwords.txt
+```
+
+Example directory layout of the pypiserver
+
+```
+.
+│   passwords.txt
+│   pypi-start.bat
+│
+├───mqttms
+│       mqttms-3.0.1-cp313-cp313-win_amd64.whl
+│       mqttms-3.0.1.tar.gz
+│       mqttms-3.1.1-cp313-cp313-win_amd64.whl
+│       mqttms-3.1.1.tar.gz
+│
+├───ota_http_server
+│       ota_http_server-2.0.3-cp313-cp313-win_amd64.whl
+│       ota_http_server-2.0.3.tar.gz
+│
+└───pymodule
+        pymodule-0.1.0-cp313-cp313-win_amd64.whl
+        pymodule-0.1.0.tar.gz
+```
+
+### Client side configuration.
+
+Clients should be told that they shall look for packages at the local pypiserver instead of the global `htpps://PyPi.org`.
+
+On Linux:
+
+Create `~/.pip/pip.conf` with content
+```conf
+[global]
+index-url = http://pypi.ourcompany.com/simple
+extra-index-url = https://pypi.org/simple
+trusted-host = pypi.mycompany.com
+```
+
+On Windows:
+
+Create `C:\Users\user\AppData\Roaming\pip\pip.ini` with content:
+```conf
+[global]
+index-url = http://pypi.ourcompany.com/simple
+extra-index-url = https://pypi.org/simple
+trusted-host = pypi.mycompany.com
+```
+
+This file states:
+* `pip` to use `http://pypi.ourcompany.com/simple` instead of `https://pypi.org/simple`.
+* If the package to be installed is not found on `http://pypi.ourcompany.com/simple` then `https://pypi.org/simple` is used.
+* `trusted-host` says that pypi.mycompany.com is a trusted site. Without this command pip will refuse to download packages from `pypi.mycompany.com`.
+
+`pypiserver` can work behind Apache server which plays as reverse-proxy / https front end.
+
+## Installers: pip vs pipx
+
+`pip` is the usual installer of Python packages. However there is a `pipx` and there is reasons tyo use it when appropriate.
+
+Below is a clear rule-of-thumb used in many Python development teams:
+
+✅ **Use pipx for CLI applications**
+
+If the project **produces an executable command`` (a CLI tool), then **pipx is the preferred installer**.
+
+Examples:
+
+* black
+* poetry
+* httpie
+* Any poetry project that defines console scripts
+
+**Why pipx?**
+
+Installs each tool in an **isolated virtual environment**
+
+No dependency conflicts between tools
+
+Commands are exposed directly on PATH
+
+Easy to upgrade/remove a tool cleanly
+
+**If the Poetry project is meant to be used as a CLI tool → use pipx**.
+
+```
+pipx install dist/myapp-1.0.0-py3-none-any.whl
+```
+
+✅ Use pip when installing a library into a project environment
+
+If your Poetry-managed project is meant to be used **as a library inside another Python environment**, then use pip.
+
+Examples:
+
+* A shared internal company library imported by other apps
+* SDKs
+* Modules used by other Python code, not end users
+
+Use pip in the target environment:
+
+```
+pip install mylib-1.0.0.whl
+```
+
+❗ **Important Point About Poetry Projects**
+
+Poetry creates the `wheel` or `sdist`. Once built, the installation method (pip or pipx) does **not** depend on Poetry anymore.
+
+⭐ **Decision Summary**
+
+Type of project | Install with
+----------------| ------------
+CLI tool (console scripts) | pipx
+Library | pip
+App used by end-users | pipx unless it’s a GUI app
+App used inside another Python app | pip
+
+**If unsure → pipx is safer**
+
+Because it won’t pollute the system Python environment or conflict with other apps.
+
+🖥️ **Why GUI apps are usually not installed with pipx**
+
+`pipx` is designed specifically for **CLI (command-line) tools** that expose *console scripts*. GUI apps usually behave differently:
+
+✔ **GUI apps often:**
+
+* need desktop shortcuts
+* need icons
+* may require additional non-Python resources
+* integrate with the OS
+* need to run outside a terminal
+
+…and pipx does **not** handle any of that.
+
+✔ **pipx installs tools inside isolated venvs and exposes only console scripts on PATH**
+
+So a typical GUI app that is launched via:
+
+* a `.exe` wrapper
+* a `.desktop` file (Linux)
+* a macOS app bundle
+* or a script that requires its working directory to include resources
+
+…may not work correctly when installed via pipx, because pipx **doesn’t install GUI launchers** or manage app resources.
+
+👉 **pipx = perfect for CLI utilities**
+👉 **pip = fine for GUI apps, but often companies use installers instead (MSI, EXE, DMG)**
+
+🧪 **CLI vs GUI — the core principle**
+
+✔ **CLI app**
+
+* Has an entry in [tool.poetry.scripts]
+* Meant to be typed in terminal
+* Perfect for pipx
+
+✔ **GUI app**
+
+* Should have an OS-native launcher
+* Often uses resources that need a fixed install location
+* pipx doesn't handle OS-level integration
+* Better installed via pip or a packaged installer
