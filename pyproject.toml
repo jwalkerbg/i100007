@@ -13,7 +13,7 @@ include = [
     "build.py",
     "README.md",
     "src/pymodule/**"
-]  # Compiled extensions
+]
 exclude = [
     "src/pymodule/extensions/hello_world/hello_world.c",
     "src/pymodule/extensions/worker/worker.c"
