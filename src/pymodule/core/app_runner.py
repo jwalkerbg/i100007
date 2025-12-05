@@ -1,7 +1,5 @@
 # app_runner.py
 
-import argparse
-
 from importlib.metadata import version as pkg_version
 
 import pymodule
