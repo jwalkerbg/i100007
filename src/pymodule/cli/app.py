@@ -28,7 +28,7 @@ def main() -> None:
             # Step 3b: Run the application with the collected configuration
             run_app(cfg)
     except Exception as e:
-        logger.error("The application could not be started because of errors. %s", str(e))
+        logger.error("Application terminated: %s", str(e), exc_info=False)
 
 if __name__ == "__main__":
     main()

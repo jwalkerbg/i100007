@@ -31,9 +31,9 @@ def run_app(cfg:Config) -> None:
 
         pymodule.core.benchmark.benchmark(500000)
     except ValueError as e:
-        logger.error("Error in application run: %s",str(e))
+        raise e
     except Exception as e:
-        logger.error("Unexpected error in application run: %s",str(e))
+        raise e
     finally:
         logger.info("Exiting run_app")
 

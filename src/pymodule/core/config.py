@@ -140,13 +140,10 @@ class Config:
                 return toml.load(f)
 
         except FileNotFoundError as e:
-            logger.error("%s",str(e))
             raise e  # Optionally re-raise the exception if you want to propagate it
         except toml.TOMLDecodeError as e:
-            logger.error("Error: Failed to parse TOML file '%s'. Invalid TOML syntax.",file_path)
             raise e  # Re-raise the exception for further handling
         except Exception as e:
-            logger.error("An unexpected error occurred while loading the TOML file: %s",str(e))
             raise e  # Catch-all for any other unexpected exceptions
 
     def load_config_file(self, file_path: str="config.toml") -> Dict[str, Any]:
@@ -161,10 +158,8 @@ class Config:
             config_file = self.load_toml(file_path=file_path)
             validate(instance=config_file, schema=self.CONFIG_SCHEMA)
         except ValidationError as e:
-            logger.warning("Configuration validation error in %s: %s",file_path,str(e))
-            raise ValueError from e
+            raise ValidationError(f"Configuration file validation error: {e}")
         except Exception as e:
-            logger.error("Exception when trying to load %s: %s",file_path,str(e))
             raise e
 
         self.deep_update(config=self.config, config_file=config_file)
@@ -369,15 +364,13 @@ def get_app_configuration() -> Config:
     try:
         config_instance.load_config_file(config_file)
     except Exception as e:
-        logger.info("Error with loading configuration file. Giving up.\n%s",str(e))
-        raise
+        raise e
 
     # Step 4: Load config from environment variables (if set)
     try:
         config_instance.load_config_env()
     except Exception as e:
-        logger.info("Error with loading environment variables. Giving up.\n%s",str(e))
-        raise
+        raise e
 
     # Step 5: Merge default config, config.json, and command-line arguments
     config_instance.merge_cli_options(args)
