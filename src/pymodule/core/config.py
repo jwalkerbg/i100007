@@ -242,7 +242,7 @@ class Config:
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments, including nested options for mqtt and MS Protocol."""
-    parser = argparse.ArgumentParser(description='My CLI App with Config File and Overrides', epilog=f'Priority: (lowest) defaults -> config file -> environment variables -> CLI options (highest)')
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='My CLI App with Config File and Overrides', epilog='Priority: (lowest) defaults -> config file -> environment variables -> CLI options (highest)')
 
     # -------------------
     # General options
